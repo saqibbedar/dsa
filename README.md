@@ -16,7 +16,7 @@ This repository is a work in progress and will be continuously updated throughou
 
 - The repository is currently being organized and will be optimized over time.
 - Different folders will be created for various DSA topics, implementations, and problem solutions.
-- A ['contribute' folder](./contribute) has been added for external contributions.
+- A ['contribute' folder](./contribute/CONTRIBUTE.yaml) has been added for external contributions.
 
 ### Contributions
 
