@@ -1,0 +1,42 @@
+# Contribution Guidelines
+
+We welcome contributions to this Data Structures and Algorithms (DSA) repository! Here are some guidelines to help you get started:
+
+1. Fork the Repository:
+   - Click the 'Fork' button at the top right of this repository to create your own copy.
+
+2. Clone Your Fork:
+   - Clone your forked repository to your local machine.
+
+3. Create a New Branch:
+   - Create a new branch for your contribution with a descriptive name.
+
+4. Make Your Changes:
+   - Add your DSA implementations, solutions, or improvements.
+   - Ensure your code is well-commented and follows good coding practices.
+
+5. Test Your Changes:
+   - Make sure your code works as expected and doesn't break existing functionality.
+
+6. Commit Your Changes:
+   - Write clear, concise commit messages explaining your changes.
+
+7. Push to Your Fork:
+   - Push your changes to your forked repository on GitHub.
+
+8. Create a Pull Request:
+   - Open a pull request from your fork to this main repository.
+   - Provide a clear description of your changes and their purpose.
+
+9. Code Review:
+   - Wait for the maintainers to review your pull request.
+   - Be open to feedback and make any requested changes.
+
+10. Merge:
+    - Once approved, your contribution will be merged into the main repository.
+
+Note:
+- For small contributions or bug fixes, you can add your code directly to the 'contribute' folder.
+- For larger contributions, consider creating a separate repository and linking it in your pull request.
+
+Thank you for contributing to our DSA learning community!
