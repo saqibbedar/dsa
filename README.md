@@ -16,16 +16,16 @@ This repository is a work in progress and will be continuously updated throughou
 
 - The repository is currently being organized and will be optimized over time.
 - Different folders will be created for various DSA topics, implementations, and problem solutions.
-- A ['contribute' folder](./contribute/CONTRIBUTE.yaml) has been added for external contributions.
+- A ['contribute' folder](https://github.com/saqibbedar/DSA/blob/main/Contribute) has been added for external contributions.
 
 ### Contributions
 
 If you'd like to contribute:
 
-1. You can add your code to the ['contribute' folder](./contribute).
+1. You can add your code to the ['contribute' folder](https://github.com/saqibbedar/DSA/blob/main/Contribute).
 2. For more extensive contributions, please create a separate repository with your organized code.
 3. If you find any errors in my solutions or have improvements, feel free to suggest updates.
-4. Please refer to the [CONTRIBUTE.yaml](./Contribute/CONTRIBUTE.yaml) file for detailed contribution guidelines.
+4. Please refer to the [CONTRIBUTE.yaml](https://github.com/saqibbedar/DSA/blob/main/Contribute/CONTRIBUTE.yaml) file for detailed contribution guidelines.
 
 ### Disclaimer
 
