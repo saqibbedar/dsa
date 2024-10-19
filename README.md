@@ -4,7 +4,6 @@
 ![GitHub stars](https://img.shields.io/github/stars/saqibbedar/DSA.svg)
 ![GitHub forks](https://img.shields.io/github/forks/saqibbedar/DSA.svg)
 ![GitHub issues](https://img.shields.io/github/issues/saqibbedar/DSA.svg)
-![visitors](https://visitor-badge.laobi.icu/badge?page_id=saqibbedar.DSA)
 
 Welcome to C++ DSA Repository! This repository serves as a collection of my learning journey, implementations, and solutions related to DSA concepts.
 
@@ -42,3 +41,5 @@ As this is a learning repository:
 - Improve documentation and README files for each section
 
 Thank you for visiting this repository. Let's learn and grow together in the world of Data Structures and Algorithms!
+
+![visitors](https://visitor-badge.laobi.icu/badge?page_id=saqibbedar.DSA)
