@@ -1,12 +1,12 @@
-# Data Structures and Algorithms (DSA)
+# Data Structures and Algorithms in C++ (CPP-DSA)
 
 ![Maintenance](https://img.shields.io/badge/Maintained%3F-yes-green.svg)
 ![GitHub stars](https://img.shields.io/github/stars/saqibbedar/DSA.svg)
 ![GitHub forks](https://img.shields.io/github/forks/saqibbedar/DSA.svg)
 ![GitHub issues](https://img.shields.io/github/issues/saqibbedar/DSA.svg)
-![GitHub clones](https://img.shields.io/github/clones/saqibbedar/DSA.svg)
+<!-- ![visitors](https://visitor-badge.laobi.icu/badge?page_id=saqibbedar.DSA) -->
 
-Welcome to my Data Structures and Algorithms (DSA)! This repository serves as a collection of my learning journey, implementations, and solutions related to DSA concepts.
+Welcome to C++ DSA Repository! This repository serves as a collection of my learning journey, implementations, and solutions related to DSA concepts.
 
 ## About This Repository
 
@@ -42,5 +42,3 @@ As this is a learning repository:
 - Improve documentation and README files for each section
 
 Thank you for visiting this repository. Let's learn and grow together in the world of Data Structures and Algorithms!
-
-![visitors](https://visitor-badge.laobi.icu/badge?page_id=saqibbedar.DSA)
