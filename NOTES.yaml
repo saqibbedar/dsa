@@ -1,0 +1,6 @@
+notes:
+  - description: How to compile and run a C++ program in VS Code when working with header files
+  - steps:
+      1: Open terminal in the current directory of your project.
+      2: Compile the program using the command: `g++ -o main main.cpp`
+      3: Run the compiled program using the command: `.\main`
