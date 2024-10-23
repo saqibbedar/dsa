@@ -1,3 +1,5 @@
+// This is a simple program to show the basic implementation of Stack, please refer to Stack Important Programs ⭐ folder, for detailed and commented code for stack implementation.
+
 #include <iostream>
 
 class stack {
@@ -51,6 +53,6 @@ bool stack::empty() const{
 
 int main()
 {
-
+    // your code will go here...
     return 0;
 }

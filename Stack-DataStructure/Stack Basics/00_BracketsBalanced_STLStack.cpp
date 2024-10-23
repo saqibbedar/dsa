@@ -1,12 +1,11 @@
-// Program to check if brackets are balanced
+// Program to check if brackets are balanced or not, using STL stack.
 
 #include <iostream>
-#include <stack>
+#include <stack> // using STL stack
 #include <string>
 
 int main()
 {
-    // StackImplementation
     std::stack<char> stk;
     std::string str;
     std::cin >> str;
