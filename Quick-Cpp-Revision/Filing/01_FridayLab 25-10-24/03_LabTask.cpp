@@ -161,7 +161,7 @@ int main(){
     //     // Calculate the number of records
     //     int n = fileSize / sizeof(record::Student);
 
-    //     // Take input to display the nth record from file
+    //     // Take input to update the nth record in file
     //     std::cout << "Enter the index of record you want to update from "<<n-1 <<" records: ";
     //     int record;
     //     std::cin >> record; // getting record to update it
