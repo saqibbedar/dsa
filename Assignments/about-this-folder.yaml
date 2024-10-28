@@ -1,0 +1,25 @@
+name: Assignment
+description: >
+  This folder contains all the assignments that I will complete during my
+  semester. It will be regularly updated with valuable assignments.
+
+purpose: >
+  To organize and keep track of all my assignments, including those on C++ OOP,
+  data structures, file handling, and more.
+
+contents:
+  - C++ Object-Oriented Programming (OOP) assignments
+  - Data Structures assignments
+  - File handling assignments
+  - Additional assignments on various topics
+
+learning_objectives:
+  - Apply C++ concepts in practical assignments
+  - Enhance problem-solving skills through diverse assignments
+  - Maintain a well-organized repository of academic work
+  - Continuously improve and update knowledge throughout the semester
+
+notes: >
+  Regularly updating and completing assignments in this folder will
+  contribute to a deeper understanding of the coursework and improve
+  academic performance.
