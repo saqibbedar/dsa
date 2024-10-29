@@ -1,5 +1,4 @@
 #pragma once
-#include <iostream>
 
 // stack implementation 
 namespace my_stk {
@@ -27,12 +26,23 @@ namespace my_stk {
         // Destructor
         ~stack(); // Destructor to free allocated memory
 
-        // 
+        // Operator overloading
         stack& operator=(const stack<T> &) const;
 
-        // Non-member function - friend function for equality comparison
+        // Non-member functions 
         template <typename U>
         friend bool operator==(const stack<U>& lhs, const stack<U>& rhs);
+        template <typename U>
+        friend bool operator!=(const stack<U> &lhs, const stack<U> &rhs);
+        template <typename U>
+        friend bool operator<(const stack<U> &lhs, const stack<U> &rhs);
+        template <typename U>
+        friend bool operator>(const stack<U> &lhs, const stack<U> &rhs);
+        template <typename U>
+        friend bool operator<=(const stack<U> &lhs, const stack<U> &rhs);
+        template <typename U>
+        friend bool operator>=(const stack<U> &lhs, const stack<U> &rhs);
+        
     };
 
     template <typename T>
@@ -50,7 +60,7 @@ namespace my_stk {
     template <typename T>
     void stack<T>::push(T value){
         if(Top == size -1){ // Check if stack is full
-            std::cout << "Stack is Full";
+            throw("Stack is full");
         } else {
             Top++; // Increment top index
             stk[Top] = value; // Add value to the stack
@@ -61,7 +71,7 @@ namespace my_stk {
     template <typename T>
     void stack<T>::pop(){
         if(Top < 0){ // Check if stack is empty
-            std::cout << "Stack is empty\n";
+            throw("Stack is empty");
         } else {
             Top--; // Decrement top index
         }
@@ -71,8 +81,7 @@ namespace my_stk {
     template <typename T>
     T stack<T>::top() const{
         if(Top < 0){ // Check if stack is empty
-            std::cout << "Stack is empty\n";
-            return -1; // Return -1 if stack is empty
+            throw("Stack is empty");
         } else {
             return stk[Top]; // Return the top element
         }
@@ -84,6 +93,7 @@ namespace my_stk {
         return Top < 0; // Return true if stack is empty
     }
 
+    // Operator overloading: assignment operator
     template <typename T>
     stack<T>& stack<T>::operator=(const stack<T>& rhs) const{
         if(this != &rhs){
@@ -98,10 +108,12 @@ namespace my_stk {
         }
     }
 
-    // Non-member function for equality comparison
+    /* Non-member functions */
+
+    // Equality Operator
     template <typename T>
     bool operator==(const stack<T>& lhs, const stack<T>& rhs){
-        if(lhs.size != rhs.size || lhs.Top != rhs.Top) // Check if sizes or top indices are different
+        if(lhs.Top != rhs.Top) // Check if top indices are different
             return false;
         for (int i = 0; i <= lhs.Top; ++i){ // Compare elements of both stacks
             if(lhs.stk[i] != rhs.stk[i])
@@ -109,4 +121,41 @@ namespace my_stk {
         }
         return true; // Return true if all elements are equal
     }
+
+    // Not equal operator
+    template <typename T>
+    bool operator!=(const stack<T>& lhs, const stack<T>& rhs){
+        return !(lhs == rhs);
+    }
+
+    // less than operator
+    template <typename T>
+    bool operator<(const stack<T>& lhs, const stack<T>& rhs){
+        int minTop = lhs.Top < rhs.Top ? lhs.Top : rhs.Top;
+        for (int i = 0; i < minTop; ++i){
+            if(lhs.stk[i] < rhs.stk[i])
+                return true; // lhs is "less" if it has a smaller element
+            else if(lhs.stk[i] > rhs.stk[i])
+                return false; // lhs is not "less" if it has a large element
+        }
+        return lhs.Top < rhs.Top; // if all elements are the same the shorter stack is "less"
+    }
+
+    // greater than operator
+    template <typename T>
+    bool operator>(const stack<T> &lhs, const stack<T> &rhs){
+        return lhs < rhs;
+    }
+
+    // greater than equal
+    template <typename T>
+    bool operator<=(const stack<T> &lhs, const stack<T> &rhs){
+        return (lhs < rhs) || (lhs == rhs);
+    }
+
+    template <typename T>
+    bool operator>=(const stack<T> &lhs, const stack<T> &rhs){
+        return (lhs > rhs) || (lhs == rhs);
+    }
+
 }

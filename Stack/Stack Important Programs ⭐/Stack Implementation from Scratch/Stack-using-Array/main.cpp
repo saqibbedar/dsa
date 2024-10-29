@@ -1,4 +1,5 @@
 #include "stack.h"
+#include <iostream>
 
 int main(){
     my_stk::stack<int> stk1(3);
