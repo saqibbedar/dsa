@@ -20,7 +20,7 @@ int main(){
         tail = temp;
     }
 
-    Node *temp = head->next;
+    Node *temp = head;
     while(temp != nullptr){
         std::cout << temp->val << " ";
         temp = temp->next;
