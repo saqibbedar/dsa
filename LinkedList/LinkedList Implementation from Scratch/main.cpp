@@ -1,30 +1,40 @@
 #include <iostream>
 
+template <typename T>
 class Node {
-    public:
-    int val;
+public:
+    T val;
     Node* next;
-    Node(int x=0): val(x), next(nullptr){}
+    Node(T x): val(x), next(nullptr){}
+};
+
+template <typename T>
+class LinkedList{
+    Node *head, *tail;
+    int size;
+
+public:
+
+    LinkedList() : head(nullptr), tail(nullptr) {}
+
+    // Functions similar to those in std::list
+    void push_back(T val);
+    void push_front(T val);
+    void pop_back();
+    void pop_front();
+    T front();
+    T back();
+    int getSize() const;
+    bool empty() const;
+    void insert(int index, T val);
+    void erase(int index);
+    void clear();
+    void display() const;
+
+    ~LinkedList();
 };
 
 int main(){
-    Node *head, *tail;
-    head = new Node;
-    tail = head;
-
-    int arr[3] = {1, 3, 5};
-
-    for (int i = 0; i < 3; ++i){
-        Node *temp = new Node(arr[i]);
-        tail->next = temp;
-        tail = temp;
-    }
-
-    Node *temp = head;
-    while(temp != nullptr){
-        std::cout << temp->val << " ";
-        temp = temp->next;
-    }
 
     return 0;
 }
