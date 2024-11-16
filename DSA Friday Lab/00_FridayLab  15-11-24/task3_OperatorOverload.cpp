@@ -99,7 +99,7 @@ public:
         } else {
             for (int i = 0, j = 1; i < lhs.getSize(); ++i, ++j){
                 // std::cout <<"Debug: "<< lhs.arr[j] << ", " << rhs.arr[j] << std::endl;
-                if(lhs.arr[j] > rhs.arr[j]){
+                if(lhs.arr[j] >= rhs.arr[j]){
                     return false;
                 }
             }
