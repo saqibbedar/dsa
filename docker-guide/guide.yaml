@@ -1,0 +1,10 @@
+notes:
+  - title: Run and Compile C++ Program Using Docker
+    description: |
+      From commit [6571040dcbce0178ec36cd310482808f23aa3b3b](https://github.com/saqibbedar/dsa/commit/6571040dcbce0178ec36cd310482808f23aa3b3b), Docker integration with C++ has been initiated. This allows you to run C++ programs in an isolated container without needing a C++ compiler installed on your machine. You can navigate to any directory, find a specific program, and test it using Docker. From the mentioned commit onwards, all programs will include a Dockerfile and a .dockerignore file to assist in building the Docker image. If any file does not have these files available, it means they were added before this commit. For more and a comprehensive guide on running C++ programs using Docker, please refer to the [docker-cpp-runner repository](https://github.com/saqibbedar/cpp-docker-runner). This repository provides detailed instructions and examples to help you get started quickly. Once you are familiar with the process, you can proceed to the next section to see the specific commands needed to build and run your Docker container.
+
+commands:
+  - build_image: docker build -t <image-name> .
+    description: Replace <image-name> with your desired image name, e.g., main.
+  - run_container: docker run --rm -it <image-name>
+    description: Replace <image-name> with the name of the image you built, e.g., main.
