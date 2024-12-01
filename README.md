@@ -25,7 +25,7 @@ This repository is a work in progress and will be continuously updated throughou
 - **Past Papers/**: Solutions to past exam papers.
 - **Quick C++ Revision/**: Quick revision notes and examples for C++.
 
-### 🤝 Contributions
+## 🤝 Contributions
 
 If you'd like to contribute:
 
@@ -34,11 +34,11 @@ If you'd like to contribute:
 3. If you find any errors in my solutions or have improvements, feel free to suggest updates.
 4. Please refer to the [CONTRIBUTE.yaml](https://github.com/saqibbedar/DSA/blob/main/Contribute/CONTRIBUTE.yaml) file for detailed contribution guidelines.
 
-### 🐳 Docker Users
+## 🐳 Docker Users
 
 If you are a Docker user, you can refer to the [docker-guide](https://github.com/saqibbedar/DSA/blob/main/docker-guide) directory for a detailed guide on running C++ programs using Docker. This guide will help you set up and run your C++ programs in an isolated container environment.
 
-### ⚠️ Disclaimer
+## ⚠️ Disclaimer
 
 As this is a learning repository:
 
