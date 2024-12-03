@@ -1,0 +1,24 @@
+name: Data Structures & Algorithms
+description: >
+  This directory contains comprehensive implementations of various Data Structures and Algorithms in C++.
+  All implementations are custom-built, including STL-like implementations, focusing on educational purposes
+  and practical understanding.
+
+purpose: >
+  To provide a comprehensive collection of data structure and algorithm implementations
+  with focus on custom implementations rather than using built-in STL containers.
+
+contents:
+  - Iterators:
+      description: "Collection of iterator implementations for various data structures"
+  - Queue:
+      description: "Queue data structure implementations and related programs"
+  - Sorting Algorithms:
+      description: "Various sorting algorithm implementations"
+  - Stack:
+      description: "Stack data structure implementations and related programs"
+
+maintenance:
+  status: "Active"
+  update_frequency: "Daily"
+  structure: "Subject to refactoring for better organization"
