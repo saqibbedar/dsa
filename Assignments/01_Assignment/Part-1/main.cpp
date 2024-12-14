@@ -194,8 +194,6 @@ public:
 
     // Return Total length of Records/Objects in a binary file
     int records_len(const char* filename){
-        // Best: O(1)
-        // Worst: O(1)// setup ifstream
         std::ifstream f(filename, std::ios::binary | std::ios::in);
 
         if(!f.is_open()){ // if not file throw exception
@@ -220,13 +218,10 @@ public:
 
     // Write to a file binary file
     void writeToFile(const char* filename, const BookModel* books, int size){
-        // Best: O(n)
-        // Worst: O(n)
-
         try
         {
             // setup ofstream
-            std::ofstream f(filename, std::ios::binary | std::ios::app | std::ios::out);
+            std::ofstream f(filename, std::ios::binary | std::ios::app);
 
             if(!f.is_open()){ // if file is not available
                 f.close();
@@ -248,14 +243,10 @@ public:
 
     // Read from file binary file
     void readFromFile(const char* filename, BookModel* books, int size){
-        // Best: O(1)
-        // Worst: O(1)
-
         try
         {
             // setup ifstream
-            std::ifstream f;
-            f.open(filename, std::ios::binary | std::ios::in);
+            std::ifstream f(filename, std::ios::binary);
 
             if(!f.is_open()){ // if file is not available
                 f.close();
@@ -276,9 +267,6 @@ public:
 
     // Get total records length from CSV file 
     int GetCSVLength(const char* filename){
-        // Best: O(n)
-        // Worst: O(n)
-        
         std::ifstream f(filename);
         int size = 0;
         std::string line; // count the lines
@@ -297,9 +285,6 @@ public:
 
     // write to CSV file
     void WriteToCSVFile(const char* filename, int size){
-        // Best: O(n)
-        // Worst: O(n)
-
         try
         {
 
@@ -343,11 +328,7 @@ public:
 
     // Read from CSV file
     void ReadFromCSVFile(const char* filename) {
-        // Best: O(1)
-        // Worst: O(1)
-
-        std::ifstream f;
-        f.open("BooksModel.csv");
+        std::ifstream f("BooksModel.csv");
         if(!f.is_open()){
             throw("Error: <file> Unable to open CSV file for reading");
         } else {
