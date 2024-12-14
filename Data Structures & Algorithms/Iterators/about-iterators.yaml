@@ -1,0 +1,15 @@
+name: Iterators
+description: >
+  There are two types fo Abstract Data Types i.e., Special Purpose ADT & General Purpose ADT. Special Purpose ADT includes Stack, Queue, Heap, Graph and these don't include iterators and General Purpose ADT includes iterators are List(singly, doubly), Trees, Has Tables.
+
+purpose: >
+  This directory includes implementation of General Purpose ADT with iterators.
+
+contents:
+  - LinkedList:
+      description: "Includes implementation of forward_list(singly) & list(doubly)"
+
+maintenance:
+  status: "Active"
+  update_frequency: "Daily/weekly"
+  structure: "Subject to refactoring for better organization"
