@@ -32,7 +32,7 @@ class BookModel {
     char book_author[100]; // book author
     char year_of_publish[50]; // Book published year
     char category[50]; // book category
-    std::string categories[4] = {"General", "Literature", "Science", "Religion"}; // default categories
+    char categories[4][12] = {"General", "Literature", "Science", "Religion"}; // default categories
 
     friend class Utility; // Access to BookModel Schema
     friend class BACKEND; // Access to BookModel Schema
@@ -199,7 +199,6 @@ public:
         std::ifstream f(filename, std::ios::binary | std::ios::in);
 
         if(!f.is_open()){ // if not file throw exception
-            f.close();
             return 0; // if file does not exist
         } else { // if file is available
 
