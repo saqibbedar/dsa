@@ -275,7 +275,7 @@ public:
     }
 
     // write to CSV file
-    void WriteToCSVFile(const char* filename, int size)
+    void readFromBinaryAndWriteToCSV(const char* filename, int size)
     {
         try
         {
@@ -283,7 +283,7 @@ public:
             readFromBinaryFile(filename, books, size); // read all records
 
             // setup ofstream to write records to csv file
-            std::ofstream f("BooksModel.csv", std::ios::app);
+            std::ofstream f("BookModel.csv", std::ios::app);
 
             if(!f.is_open()) {
                 throw("Error: <file> Unable to open CSV file to write records");
@@ -303,7 +303,7 @@ public:
                     f << it->unique_id << "," << it->book_name << "," << it->book_author << "," << it->year_of_publish << "," << it->category << std::endl;
                 }
 
-                std::cout << "\nData Exported Successfully to CSV file" << std::endl;
+                std::cout << "\nData exported to CSV file, successfully." << std::endl;
 
                 f.close();
             }
@@ -317,9 +317,9 @@ public:
     }
 
     // Read from CSV file
-    void ReadFromCSVFile(const char* filename) {
+    void readFromCSVFileAndWriteToBinary(const char* filename) {
         std::ifstream f;
-        f.open("BooksModel.csv");
+        f.open("BookModel.csv");
         if(!f.is_open()){
             throw("Error: <file> Unable to open CSV file for reading");
         } else {
@@ -360,7 +360,7 @@ public:
 
             writeToBinaryFile(filename, books, size); // write data to binary
 
-            std::cout << "\nData Imported Successfully to Binary file" << std::endl; // screen message
+            std::cout << "\nData imported to Binary file, successfully." << std::endl; // screen message
         }
     }
 
@@ -415,12 +415,22 @@ public:
         std::cout << "1. About My Digital Library System" << std::endl
                   << "2. How can I use it?" << std::endl
                   << "3. List Contributors" << std::endl
-                  << "4. View Source Code" << std::endl
-                  << "5. View LICENSE" << std::endl
-                  << "6. Back to Main Menu" << std::endl
-                  << "7. exit" << std::endl;
+                  << "4. View Arguments List" << std::endl
+                  << "5. View Source Code" << std::endl
+                  << "6. View LICENSE" << std::endl
+                  << "7. Back to Main Menu" << std::endl
+                  << "8. exit" << std::endl;
     }
 
+    void argumentsList() const{
+        std::cout << "1. ls args (list arguments)" << std::endl
+                  << "2. help (goto help page)" << std::endl
+                  << "3. home (goto homepage)" << std::endl
+                  << "4. search (goto search page)" << std::endl
+                  << "5. import BookModel.csv (import records from csv file to binary file - only if BookModel.csv file exits)" << std::endl
+                  << "6. export BookModel.csv (write records to BookModel.csv file)" << std::endl
+                  << "7. exit (terminate program)" << std::endl;
+    }
 };
 
 // Perform CURD operations & Application Logic
@@ -784,11 +794,11 @@ public:
                             break;
 
                         case 6: // Write to CSV File
-                            utils.WriteToCSVFile(filename, records_size);
+                            utils.readFromBinaryAndWriteToCSV(filename, records_size);
                             break;
 
                         case 7:
-                            utils.ReadFromCSVFile("BookModel.bin");
+                            utils.readFromCSVFileAndWriteToBinary("BookModel.bin");
                             break;
 
                         case 8: // Show help i.e. how to use Application
@@ -910,7 +920,7 @@ public:
 
                 // input option and render data menu wise
                 int option;
-                std::cout << "\nEnter a option [1, 2, 3, 4, 5, 6, 7]: ";
+                std::cout << "\nEnter a option [1, 2, 3, 4, 5, 6, 7, 8]: ";
                 std::cin >> option;
 
                 // terminate program incase of bad type error
@@ -919,7 +929,7 @@ public:
                     exit(0); // exist program
                 }
 
-                if(option <= 0 || option > 8){ // validate option
+                if(option <= 0 || option > 9){ // validate option
                     throw("Error: <Invalid option> Please enter valid option");
                 } else { // perform actions 
 
@@ -928,12 +938,13 @@ public:
                         case 1: // About My Digital Library
                             std::cout << "\n\t About My Digital Library\n"
                                       << std::endl
-                                      << "My Digital Library is a console based application built using C++. It includes various features such as: " << std::endl
+                                      << "My Digital Library is a console based application built using C++. It uses forward_list data structure to store the records data in binary files and also give flexibility to user to export the data from binray to csv and vice-versa. Furthermore, it also provides various command line arguments to interact with application. It includes various features such as: " << std::endl
                                       << "\n- Perform CURD Operations\n- Store Books Based on Categories\n- Search Books Based on Category, Author Name and Book Title\n- Smooth Architecture\n- Save Records with Unique ID's and more" << std::endl;
                             break;
 
                         case 2: // How I can use it?
-                            std::cout << "\nTo use My Digital Library System, follow these steps:" << std::endl
+                            std::cout << "\n\t To use My Digital Library System, follow these steps:\n" << std::endl
+                                      << "0. Use command line arguments to perform quick task easily i.e., import, export of files etc." << std::endl
                                       << "1. Navigate through the menu options to perform various operations." << std::endl
                                       << "2. Use the 'Search a Book' option to find books by name, category, or author." << std::endl
                                       << "3. Use the 'View All Books' option to see all the books in the library." << std::endl
@@ -951,20 +962,24 @@ public:
                                     << "Saqib Bedar [GitHub: https://github.com/saqibbedar/]" << std::endl;
                             break;
                         
-                        case 4: // View Source Code
+                        case 4: // list arguments
+                            utils.argumentsList();
+                            break;
+                        
+                        case 5: // View Source Code
                             std::cout << "\nSource Code: https://github.com/saqibbedar/digital-library" << std::endl;
                             break;
 
-                        case 5: // View LICENSE
+                        case 6: // View LICENSE
                             std::cout << "\nMIT LICENSE" << std::endl
                                     << "Copyright (c) 2024 Saqib Bedar" << std::endl;
                             break;
 
-                        case 6: // Back to Main Menu
+                        case 7: // Back to Main Menu
                             home_page(filename, "\n\tMy Digital Library Search System\n");
                             break;
 
-                        case 7: // Terminate Program
+                        case 8: // Terminate Program
                             std::cout << "\nThank You for using My Digital Library System" << std::endl;
                             exit(0);
 
@@ -1047,16 +1062,50 @@ void handleFirstTimeRun(const char* filename){ // if BookModel.bin is empty or n
 }
 
 // If arguments are passed then handle them
-void argumentsHandler(const char *filename, int argc, char* argv[]){
+void argumentsHandler(const char *filename, int records_size, int argc, char* argv[]){
+    FRONTEND frontend; // to show fronted pages
+    Utility utils; // to show menus i.e., argumentsList etc
     for (int i = 1; i < argc; ++i){
-        if(strcmp("help", argv[i]) == 0) {
-            FRONTEND f;
-            f.help_page(filename);
-            // std::cout << argv[i] <<std::endl;
+        if (strcmp("ls", argv[i]) == 0 && strcmp("args", argv[i+1]) == 0) { // list all arguments
+            utils.argumentsList(); // show arguments list
+            break; // break after displaying the arguments list to user
+        } else if(strcmp("help", argv[i]) == 0) { // show help page
+            frontend.help_page(filename);
+            break;
+        } else if(strcmp("import", argv[i]) == 0 && strcmp("BookModel.csv", argv[i+1]) == 0) { // write csv data to binary file
+            std::ifstream file("BookModel.csv");
+            if(file.is_open()){
+                utils.readFromCSVFileAndWriteToBinary("BookModel.csv");
+                frontend.home_page(filename, "\n\tWelcome to My Digital Library System\n");
+                break;
+            }else {
+                throw("Error: <file> 'BookModel.csv' does not exit");
+            }
+        } else if (strcmp("export", argv[i]) == 0 && strcmp("BookModel.csv", argv[i+1]) == 0){ // write binary file data to csv
+            utils.readFromBinaryAndWriteToCSV(filename, records_size);
+            frontend.home_page(filename, "\n\tWelcome to My Digital Library System\n");
+            break;
+        } else if (strcmp("search", argv[i]) == 0){ // open search page
+            frontend.search_page(filename);
+            break;
+        } else if (strcmp("home", argv[i]) == 0) { // open home page
+            frontend.home_page(filename, "\n\tWelcome to My Digital Library System\n");
+            break;
+        } else if (strcmp("exit", argv[i]) == 0) { // terminate program
+            exit(0);
+        } else {
+            std::cout << std::endl << "Error: <invalid argument> Please enter valid arguments\n" << std::endl
+                      << "\t View arguments list below and pass correct one: \n" << std::endl;
+            utils.argumentsList();
+            std::cout << std::endl;
+            break;
         }
     }
 }
 
+/*
+    Note: This program supports arguments only if the BookModel.bin file exist means you should have few records initially to work with CLI arguments
+*/
 int main(int argc, char *argv[]){
 
     const char filename[14] = "BookModel.bin"; // don't change extension of this file to other i.e., .csv etc
@@ -1067,7 +1116,14 @@ int main(int argc, char *argv[]){
     bool flag = argc > 1 ? true : false; // If arguments are passed then true else false
 
     if(flag && records_size > 0){
-        argumentsHandler(filename, argc, argv); // handle arguments if passed
+        try
+        {
+            argumentsHandler(filename, records_size, argc, argv); // handle arguments if passed
+        }
+        catch(const char *error)
+        {
+            std::cerr << error << '\n';
+        }
     } else {
         if(records_size <= 0)  { // Incase if there is no record or BookModel.bin is not available
             handleFirstTimeRun(filename);
