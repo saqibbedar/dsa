@@ -263,14 +263,13 @@ public:
         std::string line; // count the lines
 
         if(!f.is_open()){
-            f.close();
             return 0;
         } else {
             while (std::getline(f, line)) {
                 ++size;
             }
             f.close();
-            return size - 1; // -1 for firs line data headings
+            return size - 1; // -1 for first line data headings
         }
     }
 
@@ -289,7 +288,7 @@ public:
                 throw("Error: <file> Unable to open CSV file to write records");
             } else {
 
-                int csv_file_size = getCSVFileLength("BooksModel.csv"); // get records from csv file
+                int csv_file_size = getCSVFileLength("BookModel.csv"); // get records from csv file
 
                 if(csv_file_size <= 0) { // headings
                     f << "_id,Name,Author,Published,Category" << std::endl;
@@ -424,11 +423,11 @@ public:
 
     void argumentsList() const{
         std::cout << "1. ls args (list arguments)" << std::endl
-                  << "2. help (goto help page)" << std::endl
+                  << "2. help or --help (goto help page)" << std::endl
                   << "3. home (goto homepage)" << std::endl
                   << "4. search (goto search page)" << std::endl
-                  << "5. import BookModel.csv (import records from csv file to binary file - only if BookModel.csv file exits)" << std::endl
-                  << "6. export BookModel.csv (write records to BookModel.csv file)" << std::endl
+                  << "5. idata (idata: import data - It imports records from csv file to binary file - only if CSV file exits)" << std::endl
+                  << "6. edata (edata: export data - It writes records to CSV file)" << std::endl
                   << "7. exit (terminate program)" << std::endl;
     }
 };
@@ -963,6 +962,7 @@ public:
                             break;
                         
                         case 4: // list arguments
+                            std::cout << "\n\t My Digital Library Arguments List\n" << std::endl;
                             utils.argumentsList();
                             break;
                         
@@ -1069,19 +1069,22 @@ void argumentsHandler(const char *filename, int records_size, int argc, char* ar
         if (strcmp("ls", argv[i]) == 0 && strcmp("args", argv[i+1]) == 0) { // list all arguments
             utils.argumentsList(); // show arguments list
             break; // break after displaying the arguments list to user
-        } else if(strcmp("help", argv[i]) == 0) { // show help page
+        } else if(strcmp("--help", argv[i]) == 0 || strcmp("help", argv[i]) == 0) { // show help page
             frontend.help_page(filename);
             break;
-        } else if(strcmp("import", argv[i]) == 0 && strcmp("BookModel.csv", argv[i+1]) == 0) { // write csv data to binary file
+        } else if(strcmp("idata", argv[i]) == 0) { // idata: (import data) write csv data to binary file
             std::ifstream file("BookModel.csv");
             if(file.is_open()){
                 utils.readFromCSVFileAndWriteToBinary("BookModel.csv");
                 frontend.home_page(filename, "\n\tWelcome to My Digital Library System\n");
                 break;
             }else {
-                throw("Error: <file> 'BookModel.csv' does not exit");
+                std::cout << std::endl << "Error: <invalid argument> Please enter valid argument\n" << std::endl
+                        << "\t View arguments list below and pass correct one: \n" << std::endl;
+                utils.argumentsList();
+                std::cout << std::endl;
             }
-        } else if (strcmp("export", argv[i]) == 0 && strcmp("BookModel.csv", argv[i+1]) == 0){ // write binary file data to csv
+        } else if (strcmp("edata", argv[i]) == 0){ // edata: (export data) write binary file data to csv
             utils.readFromBinaryAndWriteToCSV(filename, records_size);
             frontend.home_page(filename, "\n\tWelcome to My Digital Library System\n");
             break;
@@ -1094,7 +1097,7 @@ void argumentsHandler(const char *filename, int records_size, int argc, char* ar
         } else if (strcmp("exit", argv[i]) == 0) { // terminate program
             exit(0);
         } else {
-            std::cout << std::endl << "Error: <invalid argument> Please enter valid arguments\n" << std::endl
+            std::cout << std::endl << "Error: <invalid argument> Please enter valid argument\n" << std::endl
                       << "\t View arguments list below and pass correct one: \n" << std::endl;
             utils.argumentsList();
             std::cout << std::endl;
@@ -1116,14 +1119,7 @@ int main(int argc, char *argv[]){
     bool flag = argc > 1 ? true : false; // If arguments are passed then true else false
 
     if(flag && records_size > 0){
-        try
-        {
-            argumentsHandler(filename, records_size, argc, argv); // handle arguments if passed
-        }
-        catch(const char *error)
-        {
-            std::cerr << error << '\n';
-        }
+        argumentsHandler(filename, records_size, argc, argv); // handle arguments if passed
     } else {
         if(records_size <= 0)  { // Incase if there is no record or BookModel.bin is not available
             handleFirstTimeRun(filename);
