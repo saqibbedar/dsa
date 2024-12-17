@@ -323,7 +323,7 @@ public:
             throw("Error: <file> Unable to open CSV file for reading");
         } else {
 
-            int size = getCSVFileLength("BooksModel.csv");
+            int size = getCSVFileLength("BookModel.csv");
             if(size <= 0){
                 throw("Error: <Invalid Size> Please first enter some records in CSV file");
             }
@@ -797,7 +797,7 @@ public:
                             break;
 
                         case 7:
-                            utils.readFromCSVFileAndWriteToBinary("BookModel.bin");
+                            utils.readFromCSVFileAndWriteToBinary("BookModel.csv");
                             break;
 
                         case 8: // Show help i.e. how to use Application
