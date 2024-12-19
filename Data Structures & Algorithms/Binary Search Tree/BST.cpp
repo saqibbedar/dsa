@@ -1,22 +1,22 @@
 #include <iostream>
 
-template <typename T>
+template <typename K>
 struct tnode {
-    T val;
+    K key;
     tnode *P; // Parent node
     tnode *L; // Left child
     tnode *R; // Right child
 };
 
-template <typename T>
-class BST {
-    tnode<T> *H; // Dummy head node
-    int n;       // Size of the BST
+template <typename K>
+class Set {
+    tnode<K> *H; // Dummy head node
+    int n;       // Size of the Tree
 
 public:
     // Constructor
-    BST() {
-        H = new tnode<T>; // Allocate memory for the dummy head node
+    Set() {
+        H = new tnode<K>; // Allocate memory for the dummy head node
         H->L = H;         // Left pointer points to itself
         H->R = H;         // Right pointer points to itself
         H->P = H;         // Parent pointer points to itself
@@ -24,9 +24,9 @@ public:
     }
 
     // Insert a new value
-    void insert(const T &val) {
-        tnode<T> *new_node = new tnode<T>;
-        new_node->val = val;
+    void insert(const K &key) {
+        tnode<K> *new_node = new tnode<K>;
+        new_node->key = key;
         // Initialize left and right to dummy head
         new_node->L = H; 
         new_node->R = H;
@@ -35,20 +35,20 @@ public:
             new_node->P = H; // Parent is dummy head
             H->P = new_node; // Root pointer in dummy head
         } else {
-            tnode<T> *current = H->P; // Start from root
-            tnode<T> *parent = nullptr;
+            tnode<K> *current = H->P; // Start from root
+            tnode<K> *parent = nullptr;
 
             // Traverse to find the correct position
             while (current != H) {
                 parent = current;
-                if (val < current->val)
+                if (key < current->key)
                     current = current->L; // Go left
                 else
                     current = current->R; // Go right
             }
 
             // Insert the new node
-            if (val < parent->val)
+            if (key < parent->key)
                 parent->L = new_node;
             else
                 parent->R = new_node;
@@ -65,7 +65,7 @@ public:
             return;
         }
 
-        tnode<T> *current = H->P;
+        tnode<K> *current = H->P;
 
         // Find the leftmost node
         while (current->L != H) {
@@ -74,7 +74,7 @@ public:
 
         // Traverse the tree in-order
         while (current != H) {
-            std::cout << current->val << " ";
+            std::cout << current->key << " ";
 
             if (current->R != H && current->R->P == current) {
                 current = current->R;
@@ -90,7 +90,7 @@ public:
 };
 
 int main() {
-    BST<int> tree;
+    Set<int> tree;
     int x = 19;
     tree.insert(1);
     tree.insert(2);
