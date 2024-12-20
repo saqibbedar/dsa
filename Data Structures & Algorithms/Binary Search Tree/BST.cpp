@@ -2,7 +2,7 @@
 
 template <typename K>
 struct tnode {
-    K key;
+    K key; // value in a node
     tnode *P; // Parent node
     tnode *L; // Left child
     tnode *R; // Right child
@@ -23,11 +23,11 @@ public:
         n = 0;            // Initialize tree size
     }
 
-    // Insert a new value
+    // It takes a new Key as a value and insert it in a tree
     void insert(const K &key) {
         tnode<K> *new_node = new tnode<K>;
-        new_node->key = key;
-        // Initialize left and right to dummy head
+        new_node->key = key; // assign the value to node
+        // Initialize left and right to dummy head node 
         new_node->L = H; 
         new_node->R = H;
 
@@ -41,7 +41,10 @@ public:
             // Traverse to find the correct position
             while (current != H) {
                 parent = current;
-                if (key < current->key)
+                if(key == current->key) { // if value already exists then delete the allocated memory and simply return
+                    delete new_node; // clean memory
+                    return; // simply return
+                } else if (key < current->key)
                     current = current->L; // Go left
                 else
                     current = current->R; // Go right
@@ -52,52 +55,129 @@ public:
                 parent->L = new_node;
             else
                 parent->R = new_node;
+
+            // set the parent 
             new_node->P = parent;
         }
 
         n++; // Increment tree size
     }
 
-    // Display in-order
-    void display() {
-        if (n == 0) { // Tree is empty
-            std::cout << "Tree is empty" << std::endl;
-            return;
-        }
+    // Takes key as value and search for it in a tree if Yes then return true else false
+    bool find(const K &key) const {
 
-        tnode<K> *current = H->P;
+        tnode<K> *current = H->P; // start from root node
 
-        // Find the leftmost node
-        while (current->L != H) {
-            current = current->L;
-        }
-
-        // Traverse the tree in-order
-        while (current != H) {
-            std::cout << current->key << " ";
-
-            if (current->R != H && current->R->P == current) {
-                current = current->R;
-                while (current->L != H) {
-                    current = current->L;
-                }
+        while (current != H)
+        {
+            if(key == current->key) {
+                return true; // return true if value was is found
+            } else if (key < current->key) { // go left
+                current = current->L;
             } else {
-                current = current->R;
+                current = current->R; // go right
             }
         }
-        std::cout << std::endl;
+
+        return false; // return false if value was not found
+        
     }
+    
+    // Takes key as a value and search it in a tree and delete it
+    void erase(const K &key) {
+        tnode<K> *current = H->P; // Start from the root
+        tnode<K> *parent = H;     // Keep track of the parent node
+
+        // Traverse the tree to find the node to delete
+        while (current != H) {
+            if (key == current->val) {
+                break; // Node to delete is found
+            }
+            parent = current;
+            if (key < current->val) {
+                current = current->L; // Go left
+            } else {
+                current = current->R; // Go right
+            }
+        }
+
+        if (current == H) {
+            std::cout << "Key not found." << std::endl;
+            return; // Key not found
+        }
+
+        // Case 1: Deleting a leaf node
+        if (current->L == H && current->R == H) {
+            if (parent->L == current) {
+                parent->L = H; // Update parent's left pointer
+            } else {
+                parent->R = H; // Update parent's right pointer
+            }
+            delete current;
+        }
+        // Case 2(a): Node with only a left child
+        else if (current->L != H && current->R == H) {
+            if (parent->L == current) {
+                parent->L = current->L; // Update parent's left pointer
+            } else {
+                parent->R = current->L; // Update parent's right pointer
+            }
+            current->L->P = parent; // Update child's parent pointer
+            delete current;
+        }
+        // Case 2(b): Node with only a right child
+        else if (current->L == H && current->R != H) {
+            if (parent->L == current) {
+                parent->L = current->R; // Update parent's left pointer
+            } else {
+                parent->R = current->R; // Update parent's right pointer
+            }
+            current->R->P = parent; // Update child's parent pointer
+            delete current;
+        }
+        // Case 3: Node with two children
+        else {
+            // Find in-order successor (smallest node in the right subtree)
+            tnode<K> *successor = current->R;
+            tnode<K> *successor_parent = current;
+            while (successor->L != H) {
+                successor_parent = successor;
+                successor = successor->L;
+            }
+
+            // Replace current's value with successor's value
+            current->val = successor->val;
+
+            // Delete the successor node (it will be a leaf or have only a right child)
+            if (successor_parent->L == successor) {
+                successor_parent->L = successor->R;
+            } else {
+                successor_parent->R = successor->R;
+            }
+            if (successor->R != H) {
+                successor->R->P = successor_parent;
+            }
+            delete successor;
+        }
+
+        n--; // Decrease the size of the tree
+    }
+
 };
 
 int main() {
     Set<int> tree;
-    int x = 19;
     tree.insert(1);
     tree.insert(2);
+    tree.insert(0);
     tree.insert(3);
-    tree.insert(x);
+    tree.insert(10);
 
-    tree.display();
+    if(tree.find(3)){
+        std::cout << "Yes" << std::endl;
+    } else {
+        std::cout << "No" << std::endl;
+    }
 
     return 0;
 }
