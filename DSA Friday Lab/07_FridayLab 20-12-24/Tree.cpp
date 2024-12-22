@@ -35,16 +35,10 @@ public:
             new_node->P = H; // Parent is dummy head
             H->P = new_node; // Root pointer in dummy head
         } else {
-            tnode<K> *root_node = H->P; // Start from root node: Dummy Head parent holds the root node
+            tnode<K> *current = H->P; // Start from root
             tnode<K> *parent = nullptr;
 
             // Traverse to find the correct position
-<<<<<<< HEAD
-            while (root_node != H) {
-                parent = root_node;
-                if (key < root_node->key)
-                    root_node = root_node->L; // Go left
-=======
             while (current != H) {
                 parent = current;
                 if(key == current->key) { // if value already exists then delete the allocated memory and simply return
@@ -52,9 +46,8 @@ public:
                     return; // simply return
                 } else if (key < current->key)
                     current = current->L; // Go left
->>>>>>> c50ffca30e4d3ff53e09dbdb26057512453ab015
                 else
-                    root_node = root_node->R; // Go right
+                    current = current->R; // Go right
             }
 
             // Insert the new node
