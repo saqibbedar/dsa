@@ -35,16 +35,16 @@ public:
             new_node->P = H; // Parent is dummy head
             H->P = new_node; // Root pointer in dummy head
         } else {
-            tnode<K> *current = H->P; // Start from root
+            tnode<K> *root_node = H->P; // Start from root node: Dummy Head parent holds the root node
             tnode<K> *parent = nullptr;
 
             // Traverse to find the correct position
-            while (current != H) {
-                parent = current;
-                if (key < current->key)
-                    current = current->L; // Go left
+            while (root_node != H) {
+                parent = root_node;
+                if (key < root_node->key)
+                    root_node = root_node->L; // Go left
                 else
-                    current = current->R; // Go right
+                    root_node = root_node->R; // Go right
             }
 
             // Insert the new node
