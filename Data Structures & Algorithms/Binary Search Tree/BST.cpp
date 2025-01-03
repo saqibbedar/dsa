@@ -39,10 +39,20 @@ public:
             tnode<K> *parent = nullptr;
 
             // Traverse to find the correct position
+<<<<<<< HEAD
             while (root_node != H) {
                 parent = root_node;
                 if (key < root_node->key)
                     root_node = root_node->L; // Go left
+=======
+            while (current != H) {
+                parent = current;
+                if(key == current->key) { // if value already exists then delete the allocated memory and simply return
+                    delete new_node; // clean memory
+                    return; // simply return
+                } else if (key < current->key)
+                    current = current->L; // Go left
+>>>>>>> c50ffca30e4d3ff53e09dbdb26057512453ab015
                 else
                     root_node = root_node->R; // Go right
             }
