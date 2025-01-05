@@ -6,6 +6,7 @@ struct tnode {
     tnode *P; // Parent node
     tnode *L; // Left child
     tnode *R; // Right child
+    bool is_H; // for dummy head only
 };
 
 template <typename K>
@@ -20,6 +21,7 @@ public:
         H->L = H;         // Left pointer points to itself
         H->R = H;         // Right pointer points to itself
         H->P = H;         // Parent pointer points to itself
+        H->is_H = true;
         n = 0;            // Initialize tree size
     }
 
@@ -30,6 +32,7 @@ public:
         // Initialize left and right to dummy head node 
         new_node->L = H; 
         new_node->R = H;
+        new_node->is_H = false;
 
         if (n == 0) { // If the tree is empty
             new_node->P = H; // Parent is dummy head
@@ -48,10 +51,14 @@ public:
             }
 
             // Insert the new node
-            if (key < parent->key)
+            if (key < parent->key) {
                 parent->L = new_node;
-            else
+                H->L = new_node; // dummy head left always points to lowest value in a tree
+            }
+            else {
                 parent->R = new_node;
+                H->R = new_node; // dummy head right always points to highest value in a tree
+            }
 
             // set the parent 
             new_node->P = parent;
@@ -160,20 +167,94 @@ public:
         n--; // Decrease the size of the tree
     }
 
+    class iterator{
+            tnode<K> *ptr;
+            friend Set;
+
+        public:
+            iterator() : ptr(nullptr){}
+
+            // Check if two iterators are equal, if yes true else false & rhs param is the iterator to compare with
+            bool operator!=(const iterator &rhs) const {
+                return this->ptr != rhs.ptr;
+            }
+            // Dereferences the iterator to access the value & the value pointed to by the iterator
+            K operator*() const {
+                return this->ptr->key;
+            }
+            // Pre-increment operator to move the iterator to the next element & return incremented iterator
+            iterator operator++() {
+
+				tnode<K>* ptr = this->ptr; // set current pointer to temporary pointer
+
+				if (ptr->R->is_H != true) {
+					ptr = ptr->R;
+
+					while (ptr->R->is_H != true) {
+						ptr = ptr->L;
+					}
+
+					this->ptr = ptr;
+					return *this;
+				}
+
+				else {
+					tnode<K>* _parent;
+					_parent = ptr->P;
+
+					while (ptr == _parent->R && ptr->P->is_H != true) {
+						ptr = _parent;
+						_parent = ptr->P;
+					}
+
+					this->ptr = _parent;
+					return *this;
+				}
+			}
+
+            iterator operator++(int) {
+				iterator old = this->ptr;
+				this->operator++();
+				return old;
+			}
+            // Checks if two iterators are equal, true if equal else false & rhs is the iterator to compare with.
+            bool operator==(const iterator &rhs) const {
+                return this->ptr != rhs.ptr;
+            }
+            // Accesses the member of the object pointed to by the iterator & return pointer to the value
+            K* operator->(){
+                return &this->ptr->key; // return the address of value
+            }
+    };
+
+    /* Iterator functions */
+
+    iterator begin() const{
+        iterator it;
+        it.ptr = H->L; // smallest node
+        return it;
+    }
+
+    iterator end() const{
+        iterator it;
+        it.ptr = H; // Dummy head
+        return it;
+    }
 };
 
 int main() {
     Set<int> tree;
-    tree.insert(1);
-    tree.insert(2);
-    tree.insert(0);
-    tree.insert(3);
-    tree.insert(10);
 
-    if(tree.find(3)){
-        std::cout << "Yes" << std::endl;
-    } else {
-        std::cout << "No" << std::endl;
+    // Insert elements
+    tree.insert(10);
+    tree.insert(5);
+    tree.insert(15);
+    tree.insert(3);
+    tree.insert(7);
+
+    // Test iterator
+    for (auto it = tree.begin(); it != tree.end(); ++it) {
+        std::cout << *it << " ";
     }
 
     return 0;
