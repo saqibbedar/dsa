@@ -78,7 +78,9 @@ public:
             while (current != H) // this loop will iterate until we reached to dummy head
             {
                 parent = current; // assign the current node so that parent can have a record of last node
-                if(key < current->key) { // if given value is less than current node then we know we will go left
+                if(key == current->key || val == current->val){ // avoid duplicates key or value
+                    return; // if value or key already exist then return simply
+                } else if(val < current->val) { // if given value is less than current node then we know we will go left
                     current = current->L; // move current to left side
                 } else { // if value is greater than the given value then current should move to right side
                     current = current->R; // move current to right side
@@ -86,7 +88,7 @@ public:
             }
 
             // Now we have correct position to insert the new node so check where we should add, at left or right side?
-            if(key < parent->key) { // compare key with parent->key if it less than or not? 
+            if(val < parent->val) { // compare val with parent->val if it less than or not? 
                 parent->L = new_node; // assign new_node at parents left side
                 H->L = new_node; 
             } else {
@@ -109,20 +111,46 @@ public:
         friend map;
 
         public:
+            
             bool operator==(const iterator &rhs) const {
-                return ptr->key == rhs.ptr->key && ptr->val == rhs.ptr->val;
+                return (ptr->key == rhs.ptr->key && ptr->val == rhs.ptr->val);
             }
+            
             bool operator!=(const iterator &rhs) const {
                 return ptr == rhs.ptr;
             }
+            
             int operator*() const {
-                return ptr->key;
+                std::cout << "Key: " << ptr->key << ", Value: " << ptr->val << std::endl;
             }
+            
             int* operator->() const {
-                return &ptr->key;
+                // return &ptr->key;
             }
+
             iterator operator++() {
-                
+                mnode *current = this->ptr;  // Set current pointer to temporary pointer
+
+                if (current->R->is_H != true) {
+                    current = current->R;
+
+                    while (current->R->is_H != true) {
+                        current = current->L;
+                    }
+
+                    this->ptr = current;
+                    return *this;
+                } else {
+                    mnode *parent = current->P;
+
+                    while (current == parent->R && current->P->is_H != true) {
+                        current = parent;
+                        parent = current->P;
+                    }
+
+                    this->ptr = parent;
+                    return *this;
+                }
             }
     };
 
@@ -134,7 +162,7 @@ public:
 
     iterator end() const { // it will return the highest value in a tree
         iterator it;
-        it.ptr = H->R; // H->R holds the highest value
+        it.ptr = H;
         return it;
     }
 
@@ -143,11 +171,16 @@ public:
 int main() {
     map m;
     m.insert(10, 20);
+    m.insert(20, 40);
+    m.insert(760, 340);
+    m.insert(230, 410);
+    m.insert(204, 4330);
 
     map::iterator it = m.begin();
 
     while(it != m.end()){
-        
+        *it;
+        ++it;
     }
 
     return 0;
