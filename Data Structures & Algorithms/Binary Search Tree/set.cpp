@@ -1,5 +1,20 @@
 #include <iostream>
 
+/*
+    Structure of Tree node:
+
+       tnode
+    ----------
+   |  Parent  |
+    ----------
+   |    Key   |
+    ----------
+   |   is_H   |
+    ----------
+   |  H  |  H |
+    ----------
+
+*/
 template <typename K>
 struct tnode {
     K key; // value in a node
