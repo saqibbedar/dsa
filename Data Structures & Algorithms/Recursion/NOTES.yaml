@@ -1,0 +1,5 @@
+notes:
+  - description: Important points to remember while implementing recursion.
+  - Tips:
+      1: Never use recursion if time complexity is O(n).
+      2: You can use recursion for logarithm solution
