@@ -3,16 +3,16 @@
 /*
     Structure of Tree node:
 
-       tnode
-    ----------
-   |  Parent  |
-    ----------
-   |    Key   |
-    ----------
-   |   is_H   |
-    ----------
-   |  H  |  H |
-    ----------
+           tnode
+    -----------------
+   |      Parent     |
+    -----------------
+   |       Key       |
+    -----------------
+   |      is_H       |
+    -----------------
+   |  Left  |  Right |
+    -----------------
 
 */
 template <typename K>
@@ -53,16 +53,19 @@ public:
             new_node->P = H; // Parent is dummy head
             H->P = new_node; // Root pointer in dummy head
         } else {
-            tnode<K> *root_node = H->P; // Start from root node: Dummy Head parent holds the root node
+            tnode<K> *current = H->P; // Start from root node: Dummy Head parent holds the root node
             tnode<K> *parent = nullptr;
 
             // Traverse to find the correct position
-            while (root_node != H) {
-                parent = root_node;
-                if (key < root_node->key)
-                    root_node = root_node->L; // Go left
+            while (current != H) {
+                parent = current;
+                if(key == current->key){
+                    return;
+                }
+                else if (key < current->key)
+                    current = current->L; // Go left
                 else
-                    root_node = root_node->R; // Go right
+                    current = current->R; // Go right
             }
 
             // Insert the new node
@@ -103,7 +106,7 @@ public:
     }
     
     // Takes key as a value and search it in a tree and delete it
-    void erase(const K &key) {
+    size_t erase(const K &key) {
         tnode<K> *current = H->P; // Start from the root
         tnode<K> *parent = H;     // Keep track of the parent node
 
@@ -121,12 +124,10 @@ public:
         }
 
         if (current == H) {
-            std::cout << "Key not found." << std::endl;
-            return; // Key not found
+            return -1; // Key not found
         }
-
         // Case 1: Deleting a leaf node
-        if (current->L == H && current->R == H) {
+        else if (current->L == H && current->R == H) {
             if (parent->L == current) {
                 parent->L = H; // Update parent's left pointer
             } else {
