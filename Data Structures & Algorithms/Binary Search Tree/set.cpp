@@ -29,6 +29,28 @@ class Set {
     tnode<K> *H; // Dummy head node
     int n;       // Size of the Tree
 
+    bool recursive_find(tnode<K> *ptr, const K &key) const{
+        if(ptr == H){
+            return false;
+        } else if (ptr->key == key) {
+            return true;
+        } else if (key < ptr->key) {
+            recursive_find(ptr->L, key);
+        } else {
+            recursive_find(ptr->R, key);
+        }
+    }
+
+    void recursive_preorder_display(tnode<K> *ptr) const {
+        if(ptr == H){
+            return;
+        } else {
+            std::cout << ptr->key << " ";
+            recursive_preorder_display(ptr->L);
+            recursive_preorder_display(ptr->R);
+        }
+    }
+
 public:
     // Constructor
     Set() {
@@ -85,6 +107,10 @@ public:
         n++; // Increment tree size
     }
 
+    bool find_r(const K &key) const {
+        return recursive_find(H->P, key);
+    }
+
     // Takes key as value and search for it in a tree if Yes then return true else false
     bool find(const K &key) const {
 
@@ -103,6 +129,10 @@ public:
 
         return false; // return false if value was not found
         
+    }
+
+    void display_r() const {
+        recursive_preorder_display(H->P);
     }
     
     // Takes key as a value and search it in a tree and delete it
@@ -268,10 +298,12 @@ int main() {
     tree.insert(3);
     tree.insert(7);
 
-    // Test iterator
-    for (auto it = tree.begin(); it != tree.end(); ++it) {
-        std::cout << *it << " ";
-    }
+    tree.display_r();
+
+    // // Test iterator
+    // for (auto it = tree.begin(); it != tree.end(); ++it) {
+    //     std::cout << *it << " ";
+    // }
 
     return 0;
 }
