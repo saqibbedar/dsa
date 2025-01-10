@@ -18,9 +18,9 @@
 template <typename K>
 struct tnode {
     K key; // value in a node
-    tnode *P; // Parent node
-    tnode *L; // Left child
-    tnode *R; // Right child
+    tnode<T> *P; // Parent node
+    tnode<T> *L; // Left child
+    tnode<T> *R; // Right child
     bool is_H; // for dummy head only
 };
 
