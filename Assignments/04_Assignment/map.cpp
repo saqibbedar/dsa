@@ -1,4 +1,5 @@
 #include <iostream>
+#include <string>
 
 template<typename K, typename V>
 struct mnode {
@@ -29,7 +30,7 @@ class map{
         void insert(const K &key, const V &val) { // inserts elements or nodes
 
             // 1. Create a new node
-            mnode<K, V> nn = new mnode<K, V>; // nn: new_node
+            mnode<K, V> *nn = new mnode<K, V>; // nn: new_node
             nn->key = key;
             nn->val = val;
             nn->is_H = false;
@@ -39,6 +40,8 @@ class map{
             if(n == 0) { // 2. set root node
                 nn->P = this->H;
                 this->H->P = nn;
+                this->H->L = nn;
+                this->H->R = nn;
             } else { // 3. Insert new node at correct position
 
                 mnode<K, V> *current = H->P; // Start from root node to find position where to insert the value
@@ -62,10 +65,15 @@ class map{
                 // 5. Check where to insert the node
                 if(key < parent->key) {
                     parent->L = nn;
-                    this->H->L = nn;
                 } else {
                     parent->R = nn;
-                    this->H->R = nn;
+                }
+
+                // 6. Set dummy heads left and right to point smaller and larger values
+                if (key < H->L->key) {
+                    H->L = nn;
+                }else{
+                    H->R = nn;
                 }
 
                 // Set the parent
@@ -94,7 +102,7 @@ class map{
             return false;
         }
 
-        bool clear() const { // checks whether the container is empty
+        bool empty() const { // checks whether the container is empty
             return this->n == 0;
         }
 
@@ -111,6 +119,7 @@ class map{
             }
         }
 
+
         class iterator {
             mnode<K, V> *ptr;
             friend map<K,V>;
@@ -121,49 +130,124 @@ class map{
                 this->ptr = nullptr;
             }
 
+            bool operator!=(const iterator &rhs) const {
+                return this->ptr != rhs.ptr;
+            }
+
+            bool operator==(const iterator &rhs) const {
+                return this->ptr == rhs.ptr;
+            }
+
+            std::pair<K,V> operator*() const { // Dereferences the iterator to access the key & the value pointed by the iterator
+                return {this->ptr->key, this->ptr->val};
+            }
+
+            // std::pair<K, V>* operator->() const { // Accesses the member of the object pointed to by the iterator & return pointer to the value
+            //     return std::pair<K,V>(this->ptr->key,this->ptr->val);
+            // }
+
+            iterator operator++() {
+
+				mnode<K,V>* ptr = this->ptr; // set current pointer to temporary pointer
+
+				if (ptr->R->is_H != true) {
+					ptr = ptr->R;
+
+					while (ptr->R->is_H != true) {
+						ptr = ptr->L;
+					}
+
+					this->ptr = ptr;
+					return *this;
+				}
+
+				else {
+					mnode<K,V>* _parent;
+					_parent = ptr->P;
+
+					while (ptr == _parent->R && ptr->P->is_H != true) {
+						ptr = _parent;
+						_parent = ptr->P;
+					}
+
+					this->ptr = _parent;
+					return *this;
+				}
+			}
+
         };
 
-        K& operator[](const K &key) { // access or insert specified element
+        // K& operator[](const K &key) { // access or insert specified element
 
-        }
+        // }
 
         iterator find(const K &key) const { // finds element/node with specific key
 
-            iterator *it; // iterator to return element found
-
             mnode<K, V> *current = this->H->P; // start from root node
-
-            bool flag = false; // track if node was found?
 
             while(current != this->H){
                 if(key == current->key) {
-                    flag = true;
-                    it->ptr = current;
+                    iterator it; // iterator to return element found
+                    it.ptr = current;
                     return it;
-                } else if (key < current->L) {
+                } else if (key < current->key) {
                     current = current->L;
                 } else {
                     current = current->R;
                 }
             }
 
-            if(flag) { // if element was not found then return root node
-                it->ptr = this->H->P;
-                return it;
-            }
-
+            return this->end();
         }
 
         iterator begin() const {
-            iterator *it;
-            it->ptr = this->H->L; // assign smallest node
+            iterator it;
+            it.ptr = this->H->L; // assign smallest node
             return it;
         }
 
         iterator end() const {
-            iterator *it;
-            it->ptr = this->H; // assign dummy head - nullptr
+            iterator it;
+            it.ptr = this->H; // assign dummy head - nullptr
             return it;
         }
 
+
+        void display() const {
+            mnode<K, V> *curr = this->H->P;
+            while(curr != this->H){
+                std::cout << "Key: " << curr->key << ", Value: " << curr->val << std::endl;
+                if(curr->L != this->H){
+                    curr = curr->L;
+                } else {
+                    curr = curr->R;
+                }
+            }
+        }
 };
+
+
+int main() {
+    map<int, std::string> m;
+
+    m.insert(1, "one");
+    m.insert(2, "two");
+    m.insert(3, "three");
+    m.insert(3, "three");
+    m.insert(3, "three");
+    m.insert(4, "three");
+    m.insert(6, "three");
+
+    std::cout << "Contains key 1: " << m.contains(1) << std::endl;
+    std::cout << "Contains key 4: " << m.contains(4) << std::endl;
+
+    std::cout << "Size of map: " << m.size() << std::endl;
+    m.display();
+
+    // for (map<int, std::string>::iterator it = m.begin(); it != m.end(); ++it) {
+    //     std::pair<int, std::string> data = *it;
+    //     std::cout << "Key: " << data.first << ", Value: " << data.second << std::endl;
+    // }
+
+    return 0;
+}
