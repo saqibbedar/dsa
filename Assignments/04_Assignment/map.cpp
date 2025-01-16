@@ -156,33 +156,25 @@ class map{
             // }
 
             iterator operator++() {
+                mnode<K, V> *ptr = this->ptr; // store the current pointer in ptr
 
-				mnode<K,V>* ptr = this->ptr; // set current pointer to temporary pointer
-
-				if (ptr->R->is_H != true) {
-					ptr = ptr->R;
-
-					while (ptr->L->is_H != true) {
-						ptr = ptr->L;
-					}
-
-					this->ptr = ptr;
-					return *this;
-				}
-
-				else {
-					mnode<K,V>* _parent;
-					_parent = ptr->P;
-
-					while (ptr == _parent->R && ptr->P->is_H != true) {
-						ptr = _parent;
-						_parent = ptr->P;
-					}
-
-					this->ptr = _parent;
-					return *this;
-				}
-			}
+                if(ptr->R->is_H != true){
+                    ptr = ptr->R;
+                    while(ptr->L->is_H != true){
+                        ptr = ptr->L;
+                    }
+                    this->ptr = ptr;
+                    return *this;
+                } else {
+                    mnode<K, V> *parent = ptr->P;
+                    while(ptr == parent->R && ptr->P->is_H != true) {
+                        ptr = parent;
+                        parent = ptr->P;
+                    }
+                    this->ptr = parent;
+                    return *this;
+                }
+            }
 
         };
 
@@ -232,17 +224,20 @@ int main() {
     m.insert(2, "two");
     m.insert(3, "three");
     m.insert(3, "three");
-    m.insert(4, "three");
-    m.insert(6, "three");
+    m.insert(4, "four");
+    m.insert(6, "six");
 
     std::cout << "Contains key 1: " << m.contains(1) << std::endl;
     std::cout << "Contains key 4: " << m.contains(4) << std::endl;
 
     std::cout << "Size of map: " << m.size() << std::endl;
 
-    for (map<int, std::string>::iterator it = m.begin(); it != m.end(); ++it) {
+    map<int, std::string>::iterator it = m.begin(); 
+
+    while (it != m.end()) {
         std::pair<int, std::string> data = *it;
         std::cout << "Key: " << data.first << ", Value: " << data.second << std::endl;
+        ++it;
     }
 
     return 0;
