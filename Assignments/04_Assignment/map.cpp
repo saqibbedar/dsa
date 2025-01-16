@@ -119,6 +119,15 @@ class map{
             }
         }
 
+        void clear() const { // Erases all elements from the container
+            mnode<K, V> *current = this->H;
+            mnode<K, V> *parent = nullptr;
+
+            while(current != this->H) {
+                
+            }
+        }
+
 
         class iterator {
             mnode<K, V> *ptr;
@@ -153,7 +162,7 @@ class map{
 				if (ptr->R->is_H != true) {
 					ptr = ptr->R;
 
-					while (ptr->R->is_H != true) {
+					while (ptr->L->is_H != true) {
 						ptr = ptr->L;
 					}
 
@@ -212,18 +221,6 @@ class map{
             return it;
         }
 
-
-        void display() const {
-            mnode<K, V> *curr = this->H->P;
-            while(curr != this->H){
-                std::cout << "Key: " << curr->key << ", Value: " << curr->val << std::endl;
-                if(curr->L != this->H){
-                    curr = curr->L;
-                } else {
-                    curr = curr->R;
-                }
-            }
-        }
 };
 
 
@@ -231,8 +228,8 @@ int main() {
     map<int, std::string> m;
 
     m.insert(1, "one");
-    m.insert(2, "two");
     m.insert(3, "three");
+    m.insert(2, "two");
     m.insert(3, "three");
     m.insert(3, "three");
     m.insert(4, "three");
@@ -242,12 +239,11 @@ int main() {
     std::cout << "Contains key 4: " << m.contains(4) << std::endl;
 
     std::cout << "Size of map: " << m.size() << std::endl;
-    m.display();
 
-    // for (map<int, std::string>::iterator it = m.begin(); it != m.end(); ++it) {
-    //     std::pair<int, std::string> data = *it;
-    //     std::cout << "Key: " << data.first << ", Value: " << data.second << std::endl;
-    // }
+    for (map<int, std::string>::iterator it = m.begin(); it != m.end(); ++it) {
+        std::pair<int, std::string> data = *it;
+        std::cout << "Key: " << data.first << ", Value: " << data.second << std::endl;
+    }
 
     return 0;
 }
