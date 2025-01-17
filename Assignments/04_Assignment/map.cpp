@@ -9,6 +9,7 @@ struct mnode {
     bool is_H;
     mnode<K,V> *L; // Left
     mnode<K,V> *R; // Right
+    mnode() { is_H = false; }
 };
 
 
@@ -153,7 +154,7 @@ class map{
 				if (ptr->R->is_H != true) {
 					ptr = ptr->R;
 
-					while (ptr->R->is_H != true) {
+					while (ptr->L->is_H != true) {
 						ptr = ptr->L;
 					}
 
@@ -242,12 +243,11 @@ int main() {
     std::cout << "Contains key 4: " << m.contains(4) << std::endl;
 
     std::cout << "Size of map: " << m.size() << std::endl;
-    m.display();
 
-    // for (map<int, std::string>::iterator it = m.begin(); it != m.end(); ++it) {
-    //     std::pair<int, std::string> data = *it;
-    //     std::cout << "Key: " << data.first << ", Value: " << data.second << std::endl;
-    // }
+    for (map<int, std::string>::iterator it = m.begin(); it != m.end(); ++it) {
+         std::pair<int, std::string> data = *it;
+         std::cout << "Key: " << data.first << ", Value: " << data.second << std::endl;
+    }
 
     return 0;
 }
