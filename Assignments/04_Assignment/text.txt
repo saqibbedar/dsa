@@ -1,0 +1,1 @@
+Hello there! This is a simple test, designed to check: tokenization, stopword removal, and case normalization. Numbers like 12345, symbols such as @#$%, and mixed-case words like PyThoN should be processed correctly. Additionally, words like 'is,' 'a,' 'and,' 'the' (common stopwords) must be removed. Let's see how it works!
