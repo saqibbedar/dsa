@@ -1,9 +1,11 @@
+// implementing binary search tree using set
 #include <iostream>
+#include <string>
 
 /*
     Structure of Tree node:
 
-           tnode
+          tnode
     -----------------
    |      Parent     |
     -----------------
@@ -15,295 +17,518 @@
     -----------------
 
 */
-template <typename K>
+
+template<typename K>
 struct tnode {
-    K key; // value in a node
-    tnode *P; // Parent node
-    tnode *L; // Left child
-    tnode *R; // Right child
-    bool is_H; // for dummy head only
+    tnode<K> *P; // parent
+    K key;
+    bool is_H; // is_dummy_head
+    tnode<K> *L; // Left
+    tnode<K> *R; // Right
 };
 
-template <typename K>
-class Set {
-    tnode<K> *H; // Dummy head node
-    int n;       // Size of the Tree
 
-    bool recursive_find(tnode<K> *ptr, const K &key) const{
-        if(ptr == H){
-            return false;
-        } else if (ptr->key == key) {
-            return true;
-        } else if (key < ptr->key) {
-            recursive_find(ptr->L, key);
-        } else {
-            recursive_find(ptr->R, key);
-        }
-    }
+template<typename K>
+class set{
+    tnode<K> *H; // dummy head
+    int n; // size of set
 
-    void recursive_preorder_display(tnode<K> *ptr) const {
-        if(ptr == H){
-            return;
-        } else {
-            std::cout << ptr->key << " ";
-            recursive_preorder_display(ptr->L);
-            recursive_preorder_display(ptr->R);
-        }
-    }
-
-public:
-    // Constructor
-    Set() {
-        H = new tnode<K>; // Allocate memory for the dummy head node
-        H->L = H;         // Left pointer points to itself
-        H->R = H;         // Right pointer points to itself
-        H->P = H;         // Parent pointer points to itself
-        H->is_H = true;
-        n = 0;            // Initialize tree size
-    }
-
-    // It takes a new Key as a value and insert it in a tree
-    void insert(const K &key) {
-        tnode<K> *new_node = new tnode<K>;
-        new_node->key = key; // assign the value to node
-        // Initialize left and right to dummy head node 
-        new_node->L = H; 
-        new_node->R = H;
-        new_node->is_H = false;
-
-        if (n == 0) { // If the tree is empty
-            new_node->P = H; // Parent is dummy head
-            H->P = new_node; // Root pointer in dummy head
-        } else {
-            tnode<K> *current = H->P; // Start from root node: Dummy Head parent holds the root node
-            tnode<K> *parent = nullptr;
-
-            // Traverse to find the correct position
-            while (current != H) {
-                parent = current;
-                if(key == current->key){
-                    return;
-                }
-                else if (key < current->key)
-                    current = current->L; // Go left
-                else
-                    current = current->R; // Go right
-            }
-
-            // Insert the new node
-            if (key < parent->key) {
-                parent->L = new_node;
-                H->L = new_node; // dummy head left always points to lowest value in a tree
-            }
-            else {
-                parent->R = new_node;
-                H->R = new_node; // dummy head right always points to highest value in a tree
-            }
-
-            // set the parent 
-            new_node->P = parent;
-        }
-
-        n++; // Increment tree size
-    }
-
-    bool find_r(const K &key) const {
-        return recursive_find(H->P, key);
-    }
-
-    // Takes key as value and search for it in a tree if Yes then return true else false
-    bool find(const K &key) const {
-
-        tnode<K> *current = H->P; // start from root node
-
-        while (current != H)
-        {
-            if(key == current->key) {
-                return true; // return true if value was is found
-            } else if (key < current->key) { // go left
-                current = current->L;
-            } else {
-                current = current->R; // go right
-            }
-        }
-
-        return false; // return false if value was not found
+    /*
+        ************************
         
+           Recursive functions
+
+        ************************
+    */
+
+    void clear_r(tnode<K> *ptr) {
+        if(ptr == this->H) {
+            return;
+        }
+        clear_r(ptr->L);
+        clear_r(ptr->R);
+        delete ptr;
     }
 
-    void display_r() const {
-        recursive_preorder_display(H->P);
-    }
-    
-    // Takes key as a value and search it in a tree and delete it
-    size_t erase(const K &key) {
-        tnode<K> *current = H->P; // Start from the root
-        tnode<K> *parent = H;     // Keep track of the parent node
+    void copy_r(tnode<K>* node, tnode<K>* parent) {
+        if (node->is_H) return; // Base case
 
-        // Traverse the tree to find the node to delete
-        while (current != H) {
-            if (key == current->val) {
-                break; // Node to delete is found
-            }
-            parent = current;
-            if (key < current->val) {
-                current = current->L; // Go left
-            } else {
-                current = current->R; // Go right
-            }
-        }
+        insert(node->key, node->key); // Insert node
 
-        if (current == H) {
-            return -1; // Key not found
-        }
-        // Case 1: Deleting a leaf node
-        else if (current->L == H && current->R == H) {
-            if (parent->L == current) {
-                parent->L = H; // Update parent's left pointer
-            } else {
-                parent->R = H; // Update parent's right pointer
-            }
-            delete current;
-        }
-        // Case 2(a): Node with only a left child
-        else if (current->L != H && current->R == H) {
-            if (parent->L == current) {
-                parent->L = current->L; // Update parent's left pointer
-            } else {
-                parent->R = current->L; // Update parent's right pointer
-            }
-            current->L->P = parent; // Update child's parent pointer
-            delete current;
-        }
-        // Case 2(b): Node with only a right child
-        else if (current->L == H && current->R != H) {
-            if (parent->L == current) {
-                parent->L = current->R; // Update parent's left pointer
-            } else {
-                parent->R = current->R; // Update parent's right pointer
-            }
-            current->R->P = parent; // Update child's parent pointer
-            delete current;
-        }
-        // Case 3: Node with two children
-        else {
-            // Find in-order successor (smallest node in the right subtree)
-            tnode<K> *successor = current->R;
-            tnode<K> *successor_parent = current;
-            while (successor->L != H) {
-                successor_parent = successor;
-                successor = successor->L;
-            }
-
-            // Replace current's value with successor's value
-            current->val = successor->val;
-
-            // Delete the successor node (it will be a leaf or have only a right child)
-            if (successor_parent->L == successor) {
-                successor_parent->L = successor->R;
-            } else {
-                successor_parent->R = successor->R;
-            }
-            if (successor->R != H) {
-                successor->R->P = successor_parent;
-            }
-            delete successor;
-        }
-
-        n--; // Decrease the size of the tree
+        copy_r(node->L, parent); // Copy left subtree
+        copy_r(node->R, parent); // Copy right subtree
     }
 
-    class iterator{
+    public:
+        set(){ // constructor
+            this->H = new tnode<K>;
+            this->H->P = this->H;
+            this->H->is_H = true;
+            this->H->L = this->H;
+            this->H->R = this->H;
+            this->n = 0;
+        }
+
+        set(const set &rhs) {
+            this->H = new tnode<K>;
+            this->H->P = this->H;
+            this->H->is_H = true;
+            this->H->L = this->H;
+            this->H->R = this->H;
+            this->n = 0;
+
+            copy_r(rhs.H->P, this->H);
+        }
+        
+        ~set(){
+            clear();
+        }
+
+        void insert(const K &key) {
+            // 1. Create a new node
+            tnode<K> *nn = new tnode<K>; // nn: new_node
+            nn->key = key;
+            nn->is_H = false;
+            nn->L = this->H;
+            nn->R = this->H;
+
+            if(n == 0) { // 2. set root node
+
+                nn->P = this->H;
+                this->H->P = nn;
+                this->H->L = nn;
+                this->H->R = nn;
+
+            } else { // 3. Insert new node at correct position
+
+                tnode<K> *current = H->P; // Start from root node to find position where to insert the value
+                tnode<K> *parent = nullptr;
+
+                // 4. Traverse to find the correct position
+                while(current != this->H) {
+
+                    parent = current; // keep record of last node
+
+                    if(key == current->key) { // If already key is inserted
+                        delete nn; // delete allocated node
+                        return;
+                    } else if (key < current->key) {
+                        current = current->L; // go left
+                    } else {
+                        current = current->R; // go right
+                    }
+                }
+
+                // 5. Check where to insert the node
+                if(key < parent->key) {
+                    parent->L = nn;
+                } else {
+                    parent->R = nn;
+                }
+
+                // 6. Set dummy heads left and right to point smaller and larger values
+                if (key < H->L->key) {
+                    H->L = nn;
+                }else{
+                    H->R = nn;
+                }
+
+                // Set the parent
+                nn->P = parent;
+
+            }
+
+            ++this->n; // increment size
+        }
+
+        bool contains(const K &key) const { // checks if the container contains element with specific key
+
+            tnode<K> *current = this->H->P; // start from root node
+
+            while(current != this->H) {
+
+                if(key == current->key) {
+                    return true;
+                } else if (key < current->key) {
+                    current = current->L;
+                } else {
+                    current = current->R;
+                }
+
+            }
+
+            return false;
+        }
+
+        bool empty() const { // checks whether the container is empty
+            return this->n == 0;
+        }
+
+        int size() const { // returns the number of elements
+            return this->n;
+        }
+
+        size_t count(const K &key) const { // returns the number of elements matching specific key
+            // This is either 1 or 0 since this container does not allow duplicates.
+            if(this->contains(key)) {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+
+        void clear() { // Erases all elements from the container
+            clear_r(this->H);
+            this->H->P = this->H; 
+            this->H->L = this->H; 
+            this->H->R = this->H; 
+            this->n = 0;
+        }
+
+        size_t erase(const K &key) { // Removes specified elements from the container.
+            tnode<K> *current = this->H->P; // Start from the root
+            tnode<K> *parent = this->H;     // Keep track of the parent node
+
+            // Traverse the tree to find the node to delete
+            while (current != H) {
+                if (key == current->key) {
+                    break; // Node to delete is found
+                }
+                parent = current;
+                if (key < current->key) {
+                    current = current->L; // Go left
+                } else {
+                    current = current->R; // Go right
+                }
+            }
+
+            if (current == this->H) {
+                return -1; // Key not found
+            }
+
+            // Case 1: Deleting a leaf node
+            else if (current->L == this->H && current->R == this->H) {
+                if (parent->L == current) {
+                    parent->L = this->H; // Update parent's left pointer
+                } else {
+                    parent->R = this->H; // Update parent's right pointer
+                }
+                delete current;
+            }
+
+            // Case 2(a): Node with only a left child
+            else if (current->L != this->H && current->R == this->H) {
+                if (parent->L == current) {
+                    parent->L = current->L; // Update parent's left pointer
+                } else {
+                    parent->R = current->L; // Update parent's right pointer
+                }
+                current->L->P = parent; // Update child's parent pointer
+                delete current;
+            }
+
+            // Case 2(b): Node with only a right child
+            else if (current->L == this->H && current->R != this->H) {
+                if (parent->L == current) {
+                    parent->L = current->R; // Update parent's left pointer
+                } else {
+                    parent->R = current->R; // Update parent's right pointer
+                }
+                current->R->P = parent; // Update child's parent pointer
+                delete current;
+            }
+            // Case 3: Node with two children
+            else {
+                // Find in-order successor (smallest node in the right subtree)
+                tnode<K> *successor = current->R;
+                tnode<K> *successor_parent = current;
+
+                while (successor->L != this->H) {
+                    successor_parent = successor;
+                    successor = successor->L;
+                }
+
+                // Replace current's value with successor's value
+                current->key = successor->key;
+
+                // Delete the successor node (it will be a leaf or have only a right child)
+                if (successor_parent->L == successor) {
+                    successor_parent->L = successor->R;
+                } else {
+                    successor_parent->R = successor->R;
+                }
+                if (successor->R != H) {
+                    successor->R->P = successor_parent;
+                }
+                delete successor;
+            }
+
+            n--; // Decrease the size of the tree
+        }
+
+        set& operator=(const set& obj) {
+            if (this != &obj) {
+                clear(); // free tree before copying the values
+                copy_r(obj.H->P, this->H); // Copy new tree
+            }
+            return *this;
+        }
+
+        /*
+            ********************************
+
+                        Iterators
+
+            ********************************
+        */
+        class iterator {
             tnode<K> *ptr;
-            friend Set;
+            friend set<K>;
 
-        public:
-            iterator() : ptr(nullptr){}
+            public: 
 
-            // Check if two iterators are equal, if yes true else false & rhs param is the iterator to compare with
-            bool operator!=(const iterator &rhs) const {
-                return this->ptr != rhs.ptr;
+                iterator(){
+                    this->ptr = nullptr;
+                }
+
+                bool operator!=(const iterator &rhs) const {
+                    return this->ptr != rhs.ptr;
+                }
+
+                bool operator==(const iterator &rhs) const {
+                    return this->ptr == rhs.ptr;
+                }
+
+                K operator*() const { // Dereferences the iterator to access the key & the value pointed by the iterator
+                    return this->ptr->key;
+                }
+
+                K* operator->() const { // Accesses the member of the object pointed to by the iterator & return pointer to the value
+                    return &this->ptr->key;
+                }
+
+                iterator& operator++() {
+                    tnode<K> *ptr = this->ptr; // store the current pointer in ptr
+
+                    if(ptr->R->is_H != true){
+                        ptr = ptr->R;
+                        while(ptr->L->is_H != true){
+                            ptr = ptr->L;
+                        }
+                        this->ptr = ptr;
+                    } else {
+                        tnode<K> *parent = ptr->P;
+                        while(ptr == parent->R && ptr->P->is_H != true) {
+                            ptr = parent;
+                            parent = ptr->P;
+                        }
+                        this->ptr = parent;
+                    }
+
+                    return *this;
+                }
+
+                iterator& operator--() { // reverse of operator++
+
+                    tnode<K>* temp_ptr = this->ptr; // Store the current pointer in temporary pointer
+
+                    if (temp_ptr->L->is_H != true) { // if temp_prt's left child exist then go inside
+
+                        // first assign the left child to ptr
+                        temp_ptr = ptr->L; 
+
+                        // find the rightmost child of subtree
+                        while (temp_ptr->R->is_H != true) { 
+                            temp_ptr = temp_ptr->R;
+                        }
+
+                        this->ptr = temp_ptr; // assign the temp
+                    }
+                    
+                    // If there is no left child then move upwards
+                    else {
+                        tnode<K>* parent = temp_ptr->P; // Move upwards to parent
+                        
+
+                        while (temp_ptr == parent->L && parent->P->is_H != true){ // Find the first ancestor node that is a right child
+                            temp_ptr = parent;
+                            parent = temp_ptr->P;
+                        }
+                        this->ptr = parent; // Move to the previous node
+                    }
+
+                    return *this; // Return iterator by reference for chained operations
+                }
+
+                iterator operator--(int) {
+                    iterator old;
+                    old.ptr = this->ptr;
+                    this->operator--();
+                    return old;
+                }
+
+                iterator operator++(int) {
+                    iterator old;
+                    old.ptr = this->ptr;
+                    this->operator++();
+                    return old;
+                }
+
+
+        };
+
+        class reverse_iterator {
+
+            tnode<K> *ptr;
+            friend set<K>;
+
+            public: 
+
+                reverse_iterator(){
+                    this->ptr = nullptr;
+                }
+
+                bool operator!=(const reverse_iterator &rhs) const {
+                    return this->ptr != rhs.ptr;
+                }
+
+                bool operator==(const reverse_iterator &rhs) const {
+                    return this->ptr == rhs.ptr;
+                }
+
+                K operator*() const { 
+                    return this->ptr->key;
+                }
+
+                K* operator->() const {
+                    // Accesses the member of the object pointed to by the iterator & return pointer to the value
+                    return &this->ptr->key; // return address
+                }
+
+
+                reverse_iterator& operator++() { // reverse of operator++
+
+                    tnode<K>* temp_ptr = this->ptr; // Store the current pointer in temporary pointer
+
+                    if (temp_ptr->L->is_H != true) { // if temp_prt's left child exist then go inside
+
+                        // first assign the left child to ptr
+                        temp_ptr = ptr->L; 
+
+                        // find the rightmost child of subtree
+                        while (temp_ptr->R->is_H != true) { 
+                            temp_ptr = temp_ptr->R;
+                        }
+
+                        this->ptr = temp_ptr; // assign the temp
+                    }
+                    
+                    // If there is no left child then move upwards
+                    else {
+                        tnode<K>* parent = temp_ptr->P; // Move upwards to parent
+                        
+                        while (temp_ptr == parent->L) { 
+                            if (parent->is_H) { // Stop if we reach the dummy head 
+                                this->ptr = parent; // assign dummy head node
+                                return *this;
+                            }
+                            temp_ptr = parent;
+                            parent = temp_ptr->P;
+                        }
+                        this->ptr = parent; // Move to the previous node
+                    }
+
+                    return *this; 
+                }
+                
+                reverse_iterator operator++(int) {
+                    reverse_iterator old;
+                    old.ptr = this->ptr;
+                    this->operator++();
+                    return old;
+                }
+        };
+
+        iterator find(const K &key) const { // finds element/node with specific key
+
+            tnode<K> *current = this->H->P; // start from root node
+
+            while(current != this->H){
+                if(key == current->key) {
+                    iterator it; // iterator to return element found
+                    it.ptr = current;
+                    return it;
+                } else if (key < current->key) {
+                    current = current->L;
+                } else {
+                    current = current->R;
+                }
             }
-            // Dereferences the iterator to access the value & the value pointed to by the iterator
-            K operator*() const {
-                return this->ptr->key;
-            }
-            // Pre-increment operator to move the iterator to the next element & return incremented iterator
-            iterator operator++() {
 
-				tnode<K>* ptr = this->ptr; // set current pointer to temporary pointer
+            return this->end();
+        }
 
-				if (ptr->R->is_H != true) {
-					ptr = ptr->R;
+        iterator begin() const {
+            iterator it;
+            it.ptr = this->H->L; // assign smallest node
+            return it;
+        }
 
-					while (ptr->R->is_H != true) {
-						ptr = ptr->L;
-					}
+        iterator end() const {
+            iterator it;
+            it.ptr = this->H; // assign dummy head - nullptr
+            return it;
+        }
 
-					this->ptr = ptr;
-					return *this;
-				}
+        reverse_iterator rbegin() const {
+            reverse_iterator rit;
+            rit.ptr = this->H->R; // assign largest value
+            return rit;
+        }
 
-				else {
-					tnode<K>* _parent;
-					_parent = ptr->P;
+        reverse_iterator rend() const {
+            reverse_iterator rit;
+            rit.ptr = this->H;
+            return rit;
+        }
 
-					while (ptr == _parent->R && ptr->P->is_H != true) {
-						ptr = _parent;
-						_parent = ptr->P;
-					}
+        void swap(set<K>& rhs) {
+            std::swap(this->H, rhs.H);
+            std::swap(this->n, rhs.n);
+        }
 
-					this->ptr = _parent;
-					return *this;
-				}
-			}
-
-            iterator operator++(int) {
-				iterator old = this->ptr;
-				this->operator++();
-				return old;
-			}
-            // Checks if two iterators are equal, true if equal else false & rhs is the iterator to compare with.
-            bool operator==(const iterator &rhs) const {
-                return this->ptr != rhs.ptr;
-            }
-            // Accesses the member of the object pointed to by the iterator & return pointer to the value
-            K* operator->(){
-                return &this->ptr->key; // return the address of value
-            }
-    };
-
-    /* Iterator functions */
-
-    iterator begin() const{
-        iterator it;
-        it.ptr = H->L; // smallest node
-        return it;
-    }
-
-    iterator end() const{
-        iterator it;
-        it.ptr = H; // Dummy head
-        return it;
-    }
 };
+
 
 int main() {
-    Set<int> tree;
+    try
+    {
+        set<int> m;
 
-    // Insert elements
-    tree.insert(10);
-    tree.insert(5);
-    tree.insert(15);
-    tree.insert(3);
-    tree.insert(7);
+        m.insert(0);
+        m.insert(1);
+        m.insert(2);
+        m.insert(3);
+        m.insert(4);
+        m.insert(5);
 
-    tree.display_r();
+        std::cout << "Contains key 1: " << m.contains(0) << std::endl;
+        m.erase(4);
+        std::cout << "Contains key 4: " << m.contains(4) << std::endl;
+        std::cout << "Size of set: " << m.size() << std::endl;
 
-    // // Test iterator
-    // for (auto it = tree.begin(); it != tree.end(); ++it) {
-    //     std::cout << *it << " ";
-    // }
+        std::cout << "Iterator" << std::endl;
+        for (set<int>::iterator it = m.begin(); it != m.end(); it++){
+            std::cout << "Key: " << *it << std::endl;
+        }
 
+        m.clear();
+
+    }
+    catch(const char* error)
+    {
+        std::cerr << error << std::endl;
+    }
+    
     return 0;
 }
