@@ -1,11 +1,28 @@
+// implementing binary search tree using map
 #include <iostream>
 #include <string>
+
+/*
+    Structure of Tree node:
+
+           tnode
+    -----------------
+   |      Parent     |
+    -----------------
+   |   Key  |  Value |
+    -----------------
+   |      is_H       |
+    -----------------
+   |  Left  |  Right |
+    -----------------
+
+*/
 
 template<typename K, typename V>
 struct mnode {
     mnode<K,V> *P; // parent
     std::pair<K, V> data;
-    bool is_H;
+    bool is_H; // is_dummy_head
     mnode<K,V> *L; // Left
     mnode<K,V> *R; // Right
 
