@@ -1,22 +1,26 @@
+// Stack implementation using forward_list
+
 #include <iostream>
 
-template <typename T>
-class Node {
-public:
+/*
+	Structure of list node:
+
+		  node
+	 --------------
+	| value | next |
+	 --------------
+
+*/
+
+// forward_list node
+template <typename T>               
+struct Node {
     T value; // value
     Node *next; // pointer to next node
-    Node(T x) : value(x), next(nullptr) {}
+    Node(T x) : value(x), next(nullptr) {} // constructor with direct initialization
 };
 
-// custom swap function with templates to work with every datatype
-// template <typename T>
-// void swap(T &a, T &b){
-//     // T temp = a;
-//     // a = b;
-//     // b = temp;
-// }
-
-// Stack Class
+// Stack ADT Class
 template <typename T>
 class stack{
     Node<T> *head; // Top pointer
