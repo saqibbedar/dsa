@@ -13,6 +13,20 @@
 
 namespace mystd {
 
+    /*
+		Structure of forward_list node:
+
+                   fnode
+               --------------
+              | value | next |
+               --------------
+
+	*/
+
+    /*
+        forward_list: It is also referred as singly list and it is different from the list(doubly list) because forward list has only next pointer not previous to go back, so this is the slight difference between them. Below is the complete implementation of forward_list as defined in STL.    
+    */
+
     // forward_list node
     template <typename T>
     struct fnode
