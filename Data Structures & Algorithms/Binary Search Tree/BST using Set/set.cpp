@@ -59,6 +59,26 @@ class set{
         copy_r(node->R, parent); // Copy right subtree
     }
 
+    bool find_r(tnode<K> *ptr, const K &key) const {
+        if(key == ptr->key){
+            return true;
+        } else if (key < ptr->key){
+            find_r(ptr->L, key);
+        } else {
+            find_r(ptr->R, key);
+        }
+    }
+
+    void display_r(tnode<K> *ptr) const { // Inorder traversal
+        if(ptr == this->H){
+            return;
+        } else {
+            display_r(ptr->L);
+            std::cout << ptr->key << " ";
+            display_r(ptr->R);
+        }
+    }
+
     public:
         set(){ // constructor
             this->H = new tnode<K>;
@@ -449,6 +469,22 @@ class set{
                 }
         };
 
+        /*
+            ********************************
+
+                        Recursive
+
+            ********************************
+        */
+
+        void display() const {
+            this->display_r(this->H->P);
+        }
+
+        bool find_recursive(const K &key) const { // find recursive is not part of STL, this function is for learning purposes
+            return this->find_r(this->H->P, key);
+        }
+
         iterator find(const K &key) const { // finds element/node with specific key
 
             tnode<K> *current = this->H->P; // start from root node
@@ -510,21 +546,27 @@ int main() {
         m.insert(15);
         m.insert(2);
         m.insert(6);
-        m.insert(15);
         m.insert(12);
+        m.insert(13);
         m.insert(21);
         m.insert(1);
         m.insert(3);
 
-        std::cout << "Contains key 1: " << m.contains(0) << std::endl;
-        m.erase(4);
-        std::cout << "Contains key 4: " << m.contains(4) << std::endl;
-        std::cout << "Size of set: " << m.size() << std::endl;
-
-        std::cout << "Iterator" << std::endl;
-        for (set<int>::iterator it = m.begin(); it != m.end(); it++){
-            std::cout << "Key: " << *it << std::endl;
+        if(m.find_recursive(10)){
+            std::cout << "yes\n";
         }
+
+        m.display();
+
+        // std::cout << "Contains key 1: " << m.contains(0) << std::endl;
+        // m.erase(4);
+        // std::cout << "Contains key 4: " << m.contains(4) << std::endl;
+        // std::cout << "Size of set: " << m.size() << std::endl;
+
+        // std::cout << "Iterator" << std::endl;
+        // for (set<int>::iterator it = m.begin(); it != m.end(); it++){
+        //     std::cout << "Key: " << *it << std::endl;
+        // }
 
         m.clear();
 
