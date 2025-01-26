@@ -43,7 +43,7 @@ class map{
     */
 
     void clear_r(mnode<K,V> *ptr) {
-        if(ptr == this->H) {
+        if(ptr == this->H) { // start from root node
             return;
         }
         clear_r(ptr->L);
@@ -233,7 +233,7 @@ class map{
         }
 
         void clear() { // Erases all elements from the container
-            clear_r(this->H);
+            clear_r(this->H->P); // start from root node
             this->H->P = this->H; 
             this->H->L = this->H; 
             this->H->R = this->H; 
@@ -593,13 +593,16 @@ int main() {
     {
         map<int, std::string> m;
 
-        m.insert(std::pair<int, std::string>(1, "one"));
-        m.emplace(3, "three");
+        m.insert(std::pair<int, std::string>(10, "ten"));
+        m.emplace(5, "five");
+        m.emplace(15, "fifteen");
         m.emplace(2, "two");
-        m.emplace(3, "three");
-        m.emplace(3, "three");
-        m.emplace(4, "four");
         m.emplace(6, "six");
+        m.emplace(15, "fifteen");
+        m.emplace(12, "twelve");
+        m.emplace(21, "twenty one");
+        m.emplace(1, "one");
+        m.emplace(3, "three");
 
         std::cout << "Contains key 1: " << m.contains(1) << std::endl;
         m.erase(4);

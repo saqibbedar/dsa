@@ -178,7 +178,7 @@ class set{
         }
 
         void clear() { // Erases all elements from the container
-            clear_r(this->H);
+            clear_r(this->H->P); // start from root node
             this->H->P = this->H; 
             this->H->L = this->H; 
             this->H->R = this->H; 
@@ -505,12 +505,16 @@ int main() {
     {
         set<int> m;
 
-        m.insert(0);
-        m.insert(1);
-        m.insert(2);
-        m.insert(3);
-        m.insert(4);
+        m.insert(10);
         m.insert(5);
+        m.insert(15);
+        m.insert(2);
+        m.insert(6);
+        m.insert(15);
+        m.insert(12);
+        m.insert(21);
+        m.insert(1);
+        m.insert(3);
 
         std::cout << "Contains key 1: " << m.contains(0) << std::endl;
         m.erase(4);
