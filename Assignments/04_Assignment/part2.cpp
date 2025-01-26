@@ -1,6 +1,6 @@
 /*
 
-    Important: This code contains bugs and not finished yet, I will update it soon.
+    This program implemented with bonus task 2 and basic display functionality which prints the word and its frequency. By default, print functionality is commented and program is go with Bonus task 2 which accept argument or if no argument then reads the filename and generates html file as required in bonus task 2.
 
 */
 
@@ -8,8 +8,9 @@
 #include <set>
 #include <map>
 #include <string>
-#include <cctype> 
-#include <vector>
+#include <cctype> // For std::tolower and std::isalpha
+#include <sstream> // for Tokenization
+#include <fstream>
 
 /*
     This class will help us in Text Processing(cases, stop words, punctuations) and Tokenization(word level).
@@ -59,75 +60,169 @@ class Utility {
         "younger", "youngest", "your", "yours", "z"
     };
 
-    // Remove words punctuation and transform it to lower case
-    std::string cleanWord(const std::string& word) const {
+public:
+
+    bool isStopWord(const std::string& word) const {
+        // find return current pointer if value was found and if not then it return the end()
+        return stopWords.find(word) != stopWords.end(); // compare both's iterators
+    }
+
+    // Remove words punctuation and transform it to lower case and handle mixedcase
+    void ProcessChunk(std::string& word) const { // take word by reference
         std::string cleanedWord; 
         for (int i = 0; i < word.length(); ++i) { // loop through the word
-            if(word[i] >= 'a' && word[i] <= 'z' || word[i] >= 'A' && word[i] <= 'Z') { // keep alphabetic characters
+            if(std::isalpha(word[i])) { // keep alphabetic characters
                 cleanedWord += std::tolower(word[i]); // transform to lowercase
             }
         }
-        return cleanedWord; // return cleanedWord
+        word = cleanedWord;
     }
 
-    bool isStopWord(const std::string& word) const {
-        return stopWords.find(word) != stopWords.end();
-    }
+    // Bonus Task 2: Instead of displaying the frequencies of the words, generate an HTML file which shows a word cloud. You may use frequency as a measure of font-size and display frequent words in larger font.
 
-public:
+    void generateHTMLFile(std::map<std::string, int> &wordCount) const {
 
-    // Breakdown sentence into the chunks
-    std::vector<std::string> ProcessAndTokenizeText(const std::string& text) const {
-        std::vector<std::string> ProcessedAndTokenizeWords; // Array of Cleaned words
-        std::string chunk = "";
+        std::ofstream f("index.html"); // create index.html file
 
-        for (int i = 0; i < text.length(); ++i) {
-            if(text[i] == ' '){
-                if(!chunk.empty()){ // exclude empty ProcessedAndTokenizeWords
-                    std::string cleanedChunk = cleanWord(chunk); // clean word
-                    std::cout << "Debug: cleanedChunk: " << cleanedChunk << std::endl;
-                    if(!cleanedChunk.empty() && !isStopWord(cleanedChunk)) { // Assign, if it not a stop word and not empty
-                        ProcessedAndTokenizeWords.push_back(cleanedChunk); // push clean ProcessedAndTokenizeWords
-                        chunk = "";
-                    }
-                }
-            } else {
-                chunk += text[i];
+        auto it = wordCount.begin();
+
+        f << "<html>" << std::endl << "<title>Word Cloud</title>" << std::endl << "<body>" << std::endl;
+
+            f << "\t<h1 style='width: 100%; text-align: center; margin-top: 30px;'>Default font size is 14px</h1>" << std::endl;
+            
+            f << "\t<ul>" << std::endl;
+
+            while(it != wordCount.end()){
+                // default font size is 14px to for visiblity of word
+                f << "\t\t<li " << "style='" << "font-size: " << (14 + it->second) << "px'" << ">" << it->first << "</li>" << std::endl;
+                ++it;
             }
-        }
 
-        if(!chunk.empty()){
-            ProcessedAndTokenizeWords.push_back(chunk);
-        }
+            f << "\t</ul>" << std::endl;
 
-        return ProcessedAndTokenizeWords;
+        f << "</body>" << std::endl << "</html>"<<std::endl;
     }
 
 };
 
 int main(int argc, const char* argv[]) {
 
-    Utility u;
+    try
+    {
 
-    if(argc > 1) { // if argument are passed
-        for (int i = 1; i < argc; ++i) {
-            // write logic for it later
-        }
-    } else { // if no argument
-        // std::string filename;
-        // std::cout << "Enter filename: ";
-        // std::cin >> filename;
-        // std::cout << filename;
+        Utility utility;
 
-        // test text 
-        std::string text = "Hello world C++ is a great";
-        std::vector<std::string> ProcessedText = u.ProcessAndTokenizeText(text);
-        for (auto it = ProcessedText.begin(); it != ProcessedText.end(); ++it){
-            std::cout << *it << " ";
+        std::map<std::string, int> wordCount; // To store word frequency
+
+        if(argc > 1) { // if argument are passed
+
+            std::ifstream f(argv[1]); // open file
+
+            std::string inputText; // Store text coming from file
+
+            if(f.is_open()) {
+
+                std::string line; // to read text line by line
+
+                while(std::getline(f, line)) {
+                    inputText += line; // append the line to inputText 
+                }
+
+                f.close(); // close file after reading the text
+
+                std::stringstream chunks(inputText); // set the chunks for tokenization
+
+                std::string chunk; // token
+
+                // Process And Tokenization
+                while(chunks >> chunk) { // extract chunk from chunks
+
+                    utility.ProcessChunk(chunk); // process chunk - clean word
+
+                    if(!chunk.empty() && !utility.isStopWord(chunk)) { // if chunk is not empty and also not a stopWord then add it to the map
+                        wordCount[chunk]++; // add the key and 
+                    }
+                }
+
+                // Task 1: Display the frequencies of the word
+
+                // std::cout << "Word frequencies:\n";
+
+                // std::map<std::string, int>::iterator it = wordCount.begin();
+
+                // while(it != wordCount.end()) {
+                //     std::cout << it->first << ": " << it->second << std::endl;
+                //     ++it;
+                // }
+
+                // Bonus Task 2: Generate a HTML file
+                utility.generateHTMLFile(wordCount);
+
+            } else {
+
+                throw("Error <file> Unable to open file");
+
+            }
+
+        } else { // if no argument
+
+            // get the filename
+            std::string filename;
+            std::cout << "Enter filename: ";
+            std::cin >> filename;
+
+            std::ifstream f(filename); // open file
+
+            std::string inputText;
+
+            if(f.is_open()) {
+
+                std::string line; // read text from file line by line
+
+                while(std::getline(f, line)){
+                    inputText += line; // append line to inputText
+                }; 
+
+                f.close(); // close file after reading the text
+                
+                std::stringstream chunks(inputText);
+                std::string chunk;
+
+                // Process And Tokenization
+                while(chunks >> chunk) { // extract chunk from chunks
+
+                    utility.ProcessChunk(chunk); // process chunk
+
+                    if(!chunk.empty() && !utility.isStopWord(chunk)) { // if chunk is not empty and also not a stopWord then add it to the map
+                        wordCount[chunk]++; // add the key and 
+                    }
+                }
+
+                // Task 1: Display the frequencies of the word
+
+                // std::cout << "Word frequencies:\n";
+                // std::map<std::string, int>::iterator it = wordCount.begin();
+                // while(it != wordCount.end()) {
+                //     std::cout << it->first << ": " << it->second << std::endl;
+                //     ++it;
+                // }
+
+                // Bonus Task 2: Generate a HTML file
+                utility.generateHTMLFile(wordCount);
+
+            } else {
+
+                throw("Error <file> Unable to open file");
+
+            }
+
         }
     }
 
-    std::map<std::string, int> wordCount;
-
+    catch(const char* error)
+    {
+        std::cerr << error << std::endl;
+    }
+    
     return 0;
 }

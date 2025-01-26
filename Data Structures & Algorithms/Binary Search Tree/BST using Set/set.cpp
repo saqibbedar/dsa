@@ -1,15 +1,15 @@
-// implementing binary search tree using map
+// implementing binary search tree using set
 #include <iostream>
 #include <string>
 
 /*
     Structure of Tree node:
 
-           tnode
+          tnode
     -----------------
    |      Parent     |
     -----------------
-   |   Key  |  Value |
+   |       Key       |
     -----------------
    |      is_H       |
     -----------------
@@ -18,21 +18,20 @@
 
 */
 
-template<typename K, typename V>
-struct mnode {
-    mnode<K,V> *P; // parent
-    std::pair<K, V> data;
+template<typename K>
+struct tnode {
+    tnode<K> *P; // parent
+    K key;
     bool is_H; // is_dummy_head
-    mnode<K,V> *L; // Left
-    mnode<K,V> *R; // Right
-
+    tnode<K> *L; // Left
+    tnode<K> *R; // Right
 };
 
 
-template<typename K, typename V>
-class map{
-    mnode<K,V> *H; // dummy head
-    int n; // size of map
+template<typename K>
+class set{
+    tnode<K> *H; // dummy head
+    int n; // size of set
 
     /*
         ************************
@@ -42,7 +41,7 @@ class map{
         ************************
     */
 
-    void clear_r(mnode<K,V> *ptr) {
+    void clear_r(tnode<K> *ptr) {
         if(ptr == this->H) {
             return;
         }
@@ -51,18 +50,18 @@ class map{
         delete ptr;
     }
 
-    void copy_r(mnode<K, V>* node, mnode<K, V>* parent) {
+    void copy_r(tnode<K>* node, tnode<K>* parent) {
         if (node->is_H) return; // Base case
 
-        insert(node->data, node->data); // Insert node
+        insert(node->key, node->key); // Insert node
 
         copy_r(node->L, parent); // Copy left subtree
         copy_r(node->R, parent); // Copy right subtree
     }
 
     public:
-        map(){ // constructor
-            this->H = new mnode<K, V>;
+        set(){ // constructor
+            this->H = new tnode<K>;
             this->H->P = this->H;
             this->H->is_H = true;
             this->H->L = this->H;
@@ -70,8 +69,8 @@ class map{
             this->n = 0;
         }
 
-        map(const map &rhs) {
-            this->H = new mnode<K, V>;
+        set(const set &rhs) {
+            this->H = new tnode<K>;
             this->H->P = this->H;
             this->H->is_H = true;
             this->H->L = this->H;
@@ -81,39 +80,39 @@ class map{
             copy_r(rhs.H->P, this->H);
         }
         
-        ~map(){
+        ~set(){
             clear();
         }
 
-        void emplace(const K &key, const V &val) { // inserts elements or nodes
-
+        void insert(const K &key) {
             // 1. Create a new node
-            mnode<K, V> *nn = new mnode<K, V>; // nn: new_node
-            nn->data.first = key;
-            nn->data.second = val;
+            tnode<K> *nn = new tnode<K>; // nn: new_node
+            nn->key = key;
             nn->is_H = false;
             nn->L = this->H;
             nn->R = this->H;
 
             if(n == 0) { // 2. set root node
+
                 nn->P = this->H;
                 this->H->P = nn;
                 this->H->L = nn;
                 this->H->R = nn;
+
             } else { // 3. Insert new node at correct position
 
-                mnode<K, V> *current = H->P; // Start from root node to find position where to insert the value
-                mnode<K, V> *parent = nullptr;
+                tnode<K> *current = H->P; // Start from root node to find position where to insert the value
+                tnode<K> *parent = nullptr;
 
                 // 4. Traverse to find the correct position
                 while(current != this->H) {
 
                     parent = current; // keep record of last node
 
-                    if(key == current->data.first) { // If already key is inserted
+                    if(key == current->key) { // If already key is inserted
                         delete nn; // delete allocated node
                         return;
-                    } else if (key < current->data.first) {
+                    } else if (key < current->key) {
                         current = current->L; // go left
                     } else {
                         current = current->R; // go right
@@ -121,14 +120,14 @@ class map{
                 }
 
                 // 5. Check where to insert the node
-                if(key < parent->data.first) {
+                if(key < parent->key) {
                     parent->L = nn;
                 } else {
                     parent->R = nn;
                 }
 
                 // 6. Set dummy heads left and right to point smaller and larger values
-                if (key < H->L->data.first) {
+                if (key < H->L->key) {
                     H->L = nn;
                 }else{
                     H->R = nn;
@@ -136,61 +135,7 @@ class map{
 
                 // Set the parent
                 nn->P = parent;
-            }
 
-            ++this->n; // increment size
-        }
-
-        void insert(const std::pair<K,V> & data) {
-            // 1. Create a new node
-            mnode<K, V> *nn = new mnode<K, V>; // nn: new_node
-            nn->data.first = data.first;
-            nn->data.second = data.second;
-            nn->is_H = false;
-            nn->L = this->H;
-            nn->R = this->H;
-
-            if(n == 0) { // 2. set root node
-                nn->P = this->H;
-                this->H->P = nn;
-                this->H->L = nn;
-                this->H->R = nn;
-            } else { // 3. Insert new node at correct position
-
-                mnode<K, V> *current = H->P; // Start from root node to find position where to insert the value
-                mnode<K, V> *parent = nullptr;
-
-                // 4. Traverse to find the correct position
-                while(current != this->H) {
-
-                    parent = current; // keep record of last node
-
-                    if(data.first == current->data.first) { // If already key is inserted
-                        delete nn; // delete allocated node
-                        return;
-                    } else if (data.first < current->data.first) {
-                        current = current->L; // go left
-                    } else {
-                        current = current->R; // go right
-                    }
-                }
-
-                // 5. Check where to insert the node
-                if(data.first < parent->data.first) {
-                    parent->L = nn;
-                } else {
-                    parent->R = nn;
-                }
-
-                // 6. Set dummy heads left and right to point smaller and larger values
-                if (data.first < H->L->data.first) {
-                    H->L = nn;
-                }else{
-                    H->R = nn;
-                }
-
-                // Set the parent
-                nn->P = parent;
             }
 
             ++this->n; // increment size
@@ -198,13 +143,13 @@ class map{
 
         bool contains(const K &key) const { // checks if the container contains element with specific key
 
-            mnode<K, V> *current = this->H->P; // start from root node
+            tnode<K> *current = this->H->P; // start from root node
 
             while(current != this->H) {
 
-                if(key == current->data.first) {
+                if(key == current->key) {
                     return true;
-                } else if (key < current->data.first) {
+                } else if (key < current->key) {
                     current = current->L;
                 } else {
                     current = current->R;
@@ -219,7 +164,7 @@ class map{
             return this->n == 0;
         }
 
-        int size() const { // returns the number of elements/nodes
+        int size() const { // returns the number of elements
             return this->n;
         }
 
@@ -241,16 +186,16 @@ class map{
         }
 
         size_t erase(const K &key) { // Removes specified elements from the container.
-            mnode<K,V> *current = this->H->P; // Start from the root
-            mnode<K,V> *parent = this->H;     // Keep track of the parent node
+            tnode<K> *current = this->H->P; // Start from the root
+            tnode<K> *parent = this->H;     // Keep track of the parent node
 
             // Traverse the tree to find the node to delete
             while (current != H) {
-                if (key == current->data.first) {
+                if (key == current->key) {
                     break; // Node to delete is found
                 }
                 parent = current;
-                if (key < current->data.first) {
+                if (key < current->key) {
                     current = current->L; // Go left
                 } else {
                     current = current->R; // Go right
@@ -295,8 +240,8 @@ class map{
             // Case 3: Node with two children
             else {
                 // Find in-order successor (smallest node in the right subtree)
-                mnode<K,V> *successor = current->R;
-                mnode<K,V> *successor_parent = current;
+                tnode<K> *successor = current->R;
+                tnode<K> *successor_parent = current;
 
                 while (successor->L != this->H) {
                     successor_parent = successor;
@@ -304,7 +249,7 @@ class map{
                 }
 
                 // Replace current's value with successor's value
-                current->data.second = successor->data.second;
+                current->key = successor->key;
 
                 // Delete the successor node (it will be a leaf or have only a right child)
                 if (successor_parent->L == successor) {
@@ -321,40 +266,7 @@ class map{
             n--; // Decrease the size of the tree
         }
 
-        V& at(const K &key) const { // access specified element with bounds checking
-            mnode<K, V> *current = this->H->P; // start from root node
-
-            while(current != this->H) {
-                if(key == current->data.first) {
-                    return current->data.second; // return value
-                } else if (key < current->data.first) {
-                    current = current->L;
-                } else {
-                    current = current->R;
-                }
-            }
-
-            throw("Key not found");
-        }
-
-        V& operator[](const K &key) { // Returns a reference to the value that is mapped to a key equivalent to key or x respectively, performing an insertion if such key does not already exist.
-        
-            mnode<K, V> *current = this->H->P; // start form root node
-
-            while(current != this->H) {
-                if(key == current->data.first) {
-                    return current->data.second; // return value
-                } else if (key < current->data.first) {
-                    current = current->L;
-                } else {
-                    current = current->R;
-                }
-            }
-
-            throw("Key not found");
-        }
-
-        map& operator=(const map& obj) {
+        set& operator=(const set& obj) {
             if (this != &obj) {
                 clear(); // free tree before copying the values
                 copy_r(obj.H->P, this->H); // Copy new tree
@@ -370,8 +282,8 @@ class map{
             ********************************
         */
         class iterator {
-            mnode<K, V> *ptr;
-            friend map<K,V>;
+            tnode<K> *ptr;
+            friend set<K>;
 
             public: 
 
@@ -387,16 +299,16 @@ class map{
                     return this->ptr == rhs.ptr;
                 }
 
-                std::pair<K,V> operator*() const { // Dereferences the iterator to access the key & the value pointed by the iterator
-                    return this->ptr->data;
+                K operator*() const { // Dereferences the iterator to access the key & the value pointed by the iterator
+                    return this->ptr->key;
                 }
 
-                std::pair<K, V>* operator->() const { // Accesses the member of the object pointed to by the iterator & return pointer to the value
-                    return &this->ptr->data;
+                K* operator->() const { // Accesses the member of the object pointed to by the iterator & return pointer to the value
+                    return &this->ptr->key;
                 }
 
                 iterator& operator++() {
-                    mnode<K, V> *ptr = this->ptr; // store the current pointer in ptr
+                    tnode<K> *ptr = this->ptr; // store the current pointer in ptr
 
                     if(ptr->R->is_H != true){
                         ptr = ptr->R;
@@ -405,7 +317,7 @@ class map{
                         }
                         this->ptr = ptr;
                     } else {
-                        mnode<K, V> *parent = ptr->P;
+                        tnode<K> *parent = ptr->P;
                         while(ptr == parent->R && ptr->P->is_H != true) {
                             ptr = parent;
                             parent = ptr->P;
@@ -418,7 +330,7 @@ class map{
 
                 iterator& operator--() { // reverse of operator++
 
-                    mnode<K, V>* temp_ptr = this->ptr; // Store the current pointer in temporary pointer
+                    tnode<K>* temp_ptr = this->ptr; // Store the current pointer in temporary pointer
 
                     if (temp_ptr->L->is_H != true) { // if temp_prt's left child exist then go inside
 
@@ -435,7 +347,7 @@ class map{
                     
                     // If there is no left child then move upwards
                     else {
-                        mnode<K, V>* parent = temp_ptr->P; // Move upwards to parent
+                        tnode<K>* parent = temp_ptr->P; // Move upwards to parent
                         
 
                         while (temp_ptr == parent->L && parent->P->is_H != true){ // Find the first ancestor node that is a right child
@@ -467,8 +379,8 @@ class map{
 
         class reverse_iterator {
 
-            mnode<K, V> *ptr;
-            friend map<K,V>;
+            tnode<K> *ptr;
+            friend set<K>;
 
             public: 
 
@@ -484,19 +396,19 @@ class map{
                     return this->ptr == rhs.ptr;
                 }
 
-                std::pair<K,V> operator*() const { 
-                    return this->ptr->data;
+                K operator*() const { 
+                    return this->ptr->key;
                 }
 
-                std::pair<K,V>* operator->() const {
+                K* operator->() const {
                     // Accesses the member of the object pointed to by the iterator & return pointer to the value
-                    return &this->ptr->data; // return address
+                    return &this->ptr->key; // return address
                 }
 
 
                 reverse_iterator& operator++() { // reverse of operator++
 
-                    mnode<K, V>* temp_ptr = this->ptr; // Store the current pointer in temporary pointer
+                    tnode<K>* temp_ptr = this->ptr; // Store the current pointer in temporary pointer
 
                     if (temp_ptr->L->is_H != true) { // if temp_prt's left child exist then go inside
 
@@ -513,7 +425,7 @@ class map{
                     
                     // If there is no left child then move upwards
                     else {
-                        mnode<K, V>* parent = temp_ptr->P; // Move upwards to parent
+                        tnode<K>* parent = temp_ptr->P; // Move upwards to parent
                         
                         while (temp_ptr == parent->L) { 
                             if (parent->is_H) { // Stop if we reach the dummy head 
@@ -539,14 +451,14 @@ class map{
 
         iterator find(const K &key) const { // finds element/node with specific key
 
-            mnode<K, V> *current = this->H->P; // start from root node
+            tnode<K> *current = this->H->P; // start from root node
 
             while(current != this->H){
-                if(key == current->data.first) {
+                if(key == current->key) {
                     iterator it; // iterator to return element found
                     it.ptr = current;
                     return it;
-                } else if (key < current->data.first) {
+                } else if (key < current->key) {
                     current = current->L;
                 } else {
                     current = current->R;
@@ -580,7 +492,7 @@ class map{
             return rit;
         }
 
-        void swap(map<K,V>& rhs) {
+        void swap(set<K>& rhs) {
             std::swap(this->H, rhs.H);
             std::swap(this->n, rhs.n);
         }
@@ -591,27 +503,23 @@ class map{
 int main() {
     try
     {
-        map<int, std::string> m;
+        set<int> m;
 
-        m.insert(std::pair<int, std::string>(1, "one"));
-        m.emplace(3, "three");
-        m.emplace(2, "two");
-        m.emplace(3, "three");
-        m.emplace(3, "three");
-        m.emplace(4, "four");
-        m.emplace(6, "six");
+        m.insert(0);
+        m.insert(1);
+        m.insert(2);
+        m.insert(3);
+        m.insert(4);
+        m.insert(5);
 
-        std::cout << "Contains key 1: " << m.contains(1) << std::endl;
+        std::cout << "Contains key 1: " << m.contains(0) << std::endl;
         m.erase(4);
         std::cout << "Contains key 4: " << m.contains(4) << std::endl;
-        std::cout << "Size of map: " << m.size() << std::endl;
-
-        std::cout << "Value at index[1]: " << m[1] << std::endl;
-        std::cout << "Value at(3): " << m.at(3) << std::endl;
+        std::cout << "Size of set: " << m.size() << std::endl;
 
         std::cout << "Iterator" << std::endl;
-        for (map<int,std::string>::iterator it = m.begin(); it != m.end(); it++){
-            std::cout << "Key: " << it->first << ", Value: " << it->second << std::endl;
+        for (set<int>::iterator it = m.begin(); it != m.end(); it++){
+            std::cout << "Key: " << *it << std::endl;
         }
 
         m.clear();
