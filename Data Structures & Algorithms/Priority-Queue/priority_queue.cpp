@@ -86,12 +86,18 @@ namespace mystd {
         }
 
         void push(const T &val) { // inserts element and sorts the underlying container
+            if(this->n == this->pq_size-1){
+                throw("Priority Queue Overflow");
+            }
             this->data[this->n] = val;
             ReHeapUP(this->data, 0, this->n);
             ++this->n;
         }
 
         void pop() { // removes the top element
+            if(this->n == 0){
+                throw("Priority Queue Underflow");
+            }
             this->data[0] = data[this->n - 1];
             --this->n;
             ReHeapDown(this->data, 0, this->n-1);
