@@ -1,0 +1,7 @@
+Heap properties:
+  - The root node always has the largest value.
+  - Each node's descendants are smaller than the node itself (the parent is greater than its child).
+  - It must be a complete tree.
+
+Complete Tree:
+  - A complete tree is a binary tree where all levels are fully filled except possibly the last level, which is filled from left to right.
